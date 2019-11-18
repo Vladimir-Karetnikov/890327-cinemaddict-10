@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Каретников](https://up.htmlacademy.ru/ecmascript/10/user/890327).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Мирошниченко](https://up.htmlacademy.ru/htmlcss/25/user/591417).
 
 ---
 
