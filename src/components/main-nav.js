@@ -1,9 +1,14 @@
-export const createMainNav = () =>
-  `<nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-    <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
-  </nav>`
-;
+import {menuTypes} from '../mock/data.js';
+
+export const createMainNav = () => {
+  return menuTypes.map(({link, modifiers, title, filmsCount}) => (`
+    <a href="#${link}"
+      class="main-navigation__item
+      ${modifiers.map((modifier) => (
+      `main-navigation__item--` + modifier
+    ).trim()).join(` `)}">
+      ${title}
+      ${filmsCount ? `<span class="main-navigation__item-count">`
+      + filmsCount + `</span>` : ``}
+    </a>`).trim()).join(``);
+};

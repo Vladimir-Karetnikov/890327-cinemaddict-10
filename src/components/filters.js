@@ -1,7 +1,11 @@
-export const createFilters = () =>
-  `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`
-;
+import {sortTypes} from '../mock/data.js';
+
+export const createFilters = () => {
+  return Object.keys(sortTypes).map((type) => (`
+    <li>
+      <a href="#" class="sort__button
+      ${sortTypes[type] ? ` sort__button--active` : ``}">
+        Sort by ${type}
+      </a>
+    </li>`).trim()).join(``);
+};
