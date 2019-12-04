@@ -1,4 +1,6 @@
-export const createMovieCard = (movie) => {
+import {createElement} from '../utils.js';
+
+const createMovieCard = (movie) => {
   let description = [...movie.description].join(` `);
   if (description.length > 140) {
     description = description.substring(0, 140) + `...`;
@@ -24,3 +26,26 @@ export const createMovieCard = (movie) => {
   </article>`
   );
 };
+
+export default class MovieCard {
+  constructor(movie) {
+    this._movie = movie;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMovieCard(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,5 @@
 import {movies} from '../mock/data.js';
+import {createElement} from '../utils.js';
 
 const getFooterTemplate = () => {
   return `
@@ -10,4 +11,24 @@ const getFooterTemplate = () => {
     </section>`;
 };
 
-export {getFooterTemplate};
+export default class Footer {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getFooterTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

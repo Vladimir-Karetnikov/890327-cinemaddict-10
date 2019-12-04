@@ -1,6 +1,7 @@
 import {menuTypes} from '../mock/data.js';
+import {createElement} from '../utils.js';
 
-export const createMainNav = () => {
+const createMainNav = () => {
   return menuTypes.map(({link, modifiers, title, filmsCount}) => (`
     <a href="#${link}"
       class="main-navigation__item
@@ -12,3 +13,24 @@ export const createMainNav = () => {
       + filmsCount + `</span>` : ``}
     </a>`).trim()).join(``);
 };
+
+export default class MainNav {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainNav();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

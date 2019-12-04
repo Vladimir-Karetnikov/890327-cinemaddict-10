@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const emojiList = [
   {
     id: `emoji-smile`,
@@ -80,7 +82,7 @@ const getCommentListTemplate = (comments) => {
     </ul>`;
 };
 
-export const createMoviePopup = (movie) =>
+const createMoviePopup = (movie) =>
   `<section class="film-details">
   <form class="film-details__inner"
   action=""
@@ -213,3 +215,27 @@ export const createMoviePopup = (movie) =>
 </form>
 </section>`
 ;
+
+export default class MoviePopup {
+  constructor(movie) {
+    this._movie = movie;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMoviePopup(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement(container) {
+    container.removeChild(this._element);
+    this._element = null;
+  }
+}
