@@ -11,13 +11,17 @@ const createFilters = () => {
     </li>`).trim()).join(``);
 };
 
+const createFiltersSection = () => {
+  return `<ul class="sort">${createFilters()}</ul>`;
+};
+
 export default class Filters {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilters();
+    return createFiltersSection();
   }
 
   getElement() {

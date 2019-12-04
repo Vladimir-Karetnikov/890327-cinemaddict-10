@@ -14,13 +14,17 @@ const createMainNav = () => {
     </a>`).trim()).join(``);
 };
 
+const createMainNavSection = () => {
+  return `<nav class="main-navigation">${createMainNav()}</nav>`;
+};
+
 export default class MainNav {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMainNav();
+    return createMainNavSection();
   }
 
   getElement() {

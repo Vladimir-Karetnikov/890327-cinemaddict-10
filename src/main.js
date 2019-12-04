@@ -14,12 +14,9 @@ const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
 
 const siteHeaderElement = document.querySelector(`.header`);
 render(siteHeaderElement, new Profile().getElement(), RenderPosition.BEFOREEND);
-
 const siteMainElement = document.querySelector(`.main`);
-const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
-render(mainNavigation, new MainNav().getElement(), RenderPosition.BEFOREEND);
-const sortList = siteMainElement.querySelector(`.sort`);
-render(sortList, new Filters().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new MainNav().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new Filters().getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilmsSection().getElement(), RenderPosition.BEFOREEND);
 
 const renderFilmCards = (movie, container, place) => {
@@ -119,5 +116,4 @@ topRatedMovies.forEach((movie) => renderFilmCards(movie, topRatedContainer, Rend
 const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
 topCommentedMovies.forEach((movie) => renderFilmCards(movie, mostCommentedContainer, RenderPosition.BEFOREEND));
 
-const footer = document.querySelector(`.footer`);
-render(footer, new Footer().getElement(), RenderPosition.BEFOREEND);
+render(document.body, new Footer().getElement(), RenderPosition.BEFOREEND);
