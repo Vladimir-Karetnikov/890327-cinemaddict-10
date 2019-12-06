@@ -67,7 +67,7 @@ if (movies.length === 0) {
   render(mainMoviesContainer, new NoFilms().getElement(), RenderPosition.AFTERBEGIN);
   document.querySelectorAll(`.films-list--extra`).forEach((el) => el.remove());
 } else {
-
+  const filmsListSection = document.querySelector(`.films-list`);
   movies.slice(0, showingMoviesCount).forEach((movie) => {
     renderFilmCards(movie, mainMoviesContainer, RenderPosition.BEFOREEND);
   });
@@ -121,5 +121,4 @@ if (movies.length === 0) {
 
   const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
   topCommentedMovies.forEach((movie) => renderFilmCards(movie, mostCommentedContainer, RenderPosition.BEFOREEND));
-  const filmsListSection = document.querySelector(`.films-list`);
 }
