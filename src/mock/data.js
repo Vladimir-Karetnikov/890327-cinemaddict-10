@@ -1,4 +1,4 @@
-const MOVIES_COUNT = 15;
+const MOVIES_COUNT = 0;
 
 const titles = [
   `Citizen Kane`,
@@ -164,6 +164,35 @@ const comments = [
   }
 ];
 
+const emojiList = [
+  {
+    id: `emoji-smile`,
+    value: `sleeping`,
+    img: `./images/emoji/smile.png`
+  },
+  {
+    id: `emoji-sleeping`,
+    value: `neutral-face`,
+    img: `./images/emoji/sleeping.png`
+  },
+  {
+    id: `emoji-gpuke`,
+    value: `grinning`,
+    img: `./images/emoji/puke.png`
+  },
+  {
+    id: `emoji-angry`,
+    value: `grinning`,
+    img: `./images/emoji/angry.png`
+  }
+];
+
+const controlsTypes = {
+  watchlist: `Add to watchlist`,
+  watched: `Already watched`,
+  favorite: `Add to favorites`,
+};
+
 const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length - 1);
   return array[randomIndex];
@@ -275,4 +304,4 @@ const sortTypes = {
   rating: false
 };
 
-export {generateMovieCard, movies, rankName, menuTypes, sortTypes};
+export {generateMovieCard, movies, rankName, menuTypes, sortTypes, emojiList, controlsTypes};
