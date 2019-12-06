@@ -1,4 +1,4 @@
-const MOVIES_COUNT = 0;
+const MOVIES_COUNT = 15;
 
 const titles = [
   `Citizen Kane`,
