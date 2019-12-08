@@ -1,11 +1,7 @@
 import {sortTypes} from '../mock/data.js';
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class Filters {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Filters extends AbstractComponent {
   getTemplate() {
     return `<ul class="sort">
     ${Object.keys(sortTypes).map((type) => (`
@@ -15,17 +11,5 @@ export default class Filters {
         Sort by ${type}
       </a>
     </li>`).trim()).join(``)}</ul>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -7,26 +7,24 @@ import Profile from './components/profile.js';
 import FilmsSection from './components/films-section.js';
 import Footer from './components/footer.js';
 import NoFilms from './components/nofilms-msg.js';
-import {render, RenderPosition, KeyCodes} from './utils.js';
+import {render, RenderPosition, KeyCodes, remove} from './utils/render.js';
 import {movies} from './mock/data.js';
 
 const MOVIES_STARTING_COUNT = 5;
 const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
 
 const siteHeaderElement = document.querySelector(`.header`);
-render(siteHeaderElement, new Profile().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new Profile(), RenderPosition.BEFOREEND);
 const siteMainElement = document.querySelector(`.main`);
-render(siteMainElement, new MainNav().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Filters().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilmsSection().getElement(), RenderPosition.BEFOREEND);
-render(document.body, new Footer().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new MainNav(), RenderPosition.BEFOREEND);
+render(siteMainElement, new Filters(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilmsSection(), RenderPosition.BEFOREEND);
+render(document.body, new Footer(), RenderPosition.BEFOREEND);
 
 const renderFilmCards = (movie, container, place) => {
   const filmCardComponent = new MovieCard(movie);
   const filmDetailsComponent = new MoviePopup(movie);
-  const filmCardPosterElement = filmCardComponent.getElement().querySelector(`.film-card__poster`);
-  const filmCardTitleElement = filmCardComponent.getElement().querySelector(`.film-card__title`);
-  const filmCardCommentsElement = filmCardComponent.getElement().querySelector(`.film-card__comments`);
+
   const isEscEvent = (evt, action) => {
     if (evt.keyCode === KeyCodes.ESC) {
       action();
@@ -34,7 +32,7 @@ const renderFilmCards = (movie, container, place) => {
   };
 
   const closeFilmDetails = () => {
-    filmDetailsComponent.removeElement(document.body);
+    remove(filmDetailsComponent);
     document.removeEventListener(`keydown`, onFilmDetailsEscPress);
   };
 
@@ -44,27 +42,24 @@ const renderFilmCards = (movie, container, place) => {
 
   const onFilmCardElementClick = (evt) => {
     evt.preventDefault();
-    render(document.body, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
+    render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, onFilmDetailsEscPress);
-    document.querySelector(`.film-details__close-btn`).addEventListener(`click`, onFilmDetailsCloseBtnClick);
+    filmDetailsComponent.setCloseClickHandler(onFilmDetailsCloseBtnClick);
   };
 
   const onFilmDetailsCloseBtnClick = () => {
     closeFilmDetails();
   };
 
-  filmCardPosterElement.addEventListener(`click`, onFilmCardElementClick);
-  filmCardTitleElement.addEventListener(`click`, onFilmCardElementClick);
-  filmCardCommentsElement.addEventListener(`click`, onFilmCardElementClick);
-
-  render(container, filmCardComponent.getElement(), place);
+  filmCardComponent.setPopupOpener(onFilmCardElementClick);
+  render(container, filmCardComponent, place);
 };
 
 const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
 let showingMoviesCount = MOVIES_STARTING_COUNT;
 
 if (movies.length === 0) {
-  render(mainMoviesContainer, new NoFilms().getElement(), RenderPosition.AFTERBEGIN);
+  render(mainMoviesContainer, new NoFilms(), RenderPosition.AFTERBEGIN);
   document.querySelectorAll(`.films-list--extra`).forEach((el) => el.remove());
 } else {
   const filmsListSection = document.querySelector(`.films-list`);
@@ -72,7 +67,7 @@ if (movies.length === 0) {
     renderFilmCards(movie, mainMoviesContainer, RenderPosition.BEFOREEND);
   });
 
-  render(filmsListSection, new ShowMoreBtn().getElement(), RenderPosition.BEFOREEND);
+  render(filmsListSection, new ShowMoreBtn(), RenderPosition.BEFOREEND);
 
   const showMore = siteMainElement.querySelector(`.films-list__show-more`);
   showMore.addEventListener(`click`, () => {

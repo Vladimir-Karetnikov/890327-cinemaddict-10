@@ -1,11 +1,11 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 import {emojiList} from '../mock/data.js';
 import {controlsTypes} from '../mock/data.js';
 
-export default class MoviePopup {
+export default class MoviePopup extends AbstractComponent {
   constructor(movie) {
+    super();
     this._movie = movie;
-    this._element = null;
   }
 
   getFilmCommentTemplate(emojis) {
@@ -195,16 +195,8 @@ export default class MoviePopup {
 </section>`;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement(container) {
-    container.removeChild(this._element);
-    this._element = null;
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
   }
 }
