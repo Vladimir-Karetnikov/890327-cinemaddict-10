@@ -1,11 +1,7 @@
 import {menuTypes} from '../mock/data.js';
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class MainNav {
-  constructor() {
-    this._element = null;
-  }
-
+export default class MainNav extends AbstractComponent {
   getTemplate() {
     return `<nav class="main-navigation">
     ${menuTypes.map(({link, modifiers, title, filmsCount}) => (`
@@ -19,16 +15,5 @@ export default class MainNav {
       + filmsCount + `</span>` : ``}
     </a>`).trim()).join(``)}
     </nav>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

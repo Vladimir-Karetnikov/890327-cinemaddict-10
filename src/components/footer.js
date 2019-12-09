@@ -1,11 +1,7 @@
 import {movies} from '../mock/data.js';
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class Footer {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Footer extends AbstractComponent {
   getTemplate() {
     return `<footer class="footer">
     <section class="footer__logo logo logo--smaller">
@@ -15,17 +11,5 @@ export default class Footer {
       <p>${movies.length} movies inside</p>
     </section>
     </footer>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
