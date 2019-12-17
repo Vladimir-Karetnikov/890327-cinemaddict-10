@@ -298,33 +298,4 @@ const menuTypes = [
   }
 ];
 
-const compareRating = (b, a) => {
-  const first = a.rating;
-  const second = b.rating;
-
-  let comparison = 0;
-  if (first > second) {
-    comparison = 1;
-  } else if (first < second) {
-    comparison = -1;
-  }
-  return comparison;
-};
-
-const compareComments = (b, a) => {
-  const first = a.commentsAmount;
-  const second = b.commentsAmount;
-
-  let comparison = 0;
-  if (first > second) {
-    comparison = 1;
-  } else if (first < second) {
-    comparison = -1;
-  }
-  return comparison;
-};
-
-const topRatedMovies = movies.sort(compareRating).slice(0, 2);
-const topCommentedMovies = movies.sort(compareComments).slice(0, 2);
-
-export {generateMovieCard, movies, rankName, menuTypes, emojiList, controlsTypes, topRatedMovies, topCommentedMovies};
+export {generateMovieCard, movies, rankName, menuTypes, emojiList, controlsTypes};

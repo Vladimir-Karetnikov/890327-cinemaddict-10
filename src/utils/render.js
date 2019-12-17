@@ -1,5 +1,9 @@
-export const KeyCodes = {
-  ESC: 27
+const ESC_KEYCODE = 27;
+
+export const isEscEvent = (evt, action) => {
+  if (evt.keyCode === ESC_KEYCODE) {
+    action();
+  }
 };
 
 export const RenderPosition = {
@@ -23,9 +27,4 @@ export const render = (container, component, place) => {
       container.append(component.getElement());
       break;
   }
-};
-
-export const remove = (component) => {
-  component.getElement().remove();
-  component.removeElement();
 };
