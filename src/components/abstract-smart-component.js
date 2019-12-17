@@ -5,16 +5,15 @@ export default class AbstractSmartComponent extends AbstractComponent {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
   }
 
-  rerender() {
-    const oldElement = this.getElement();
+  rerender(oldComponent) {
+    const oldElement = oldComponent.getElement();
     const parent = oldElement.parentElement;
 
-    this.removeElement();
-
+    this._element = null;
     const newElement = this.getElement();
-
-    parent.replaceChild(newElement, oldElement);
-
+    if (parent) {
+      parent.replaceChild(newElement, oldElement);
+    }
     this.recoveryListeners();
   }
 }

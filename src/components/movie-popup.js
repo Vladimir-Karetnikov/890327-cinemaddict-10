@@ -1,11 +1,10 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from "./abstract-smart-component";
 import {emojiList} from '../mock/data.js';
 
-export default class MoviePopup extends AbstractComponent {
+export default class MoviePopup extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
-    this._subscribeOnEvents();
     this._emoji = null;
     this._closeBtnClickHandler = null;
     this._watchlistInputClickHandler = null;
@@ -220,6 +219,7 @@ export default class MoviePopup extends AbstractComponent {
       <div class="film-details__new-comment">
         <div for="add-emoji"
           class="film-details__add-emoji-label">
+          ${this._emoji ? `<img src="${this._emoji}" width="55" height="55" alt="emoji">` : ``}
         </div>
         <label class="film-details__comment-label">
           <textarea class="film-details__comment-input"
@@ -254,31 +254,18 @@ export default class MoviePopup extends AbstractComponent {
     this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
   }
 
-  recoveryListeners() {
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
-  _onEmojiClick() {
+  onEmojiClick() {
     const emojis = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`img`);
     emojis.forEach((it) => it.addEventListener(`click`, () => {
       const oldEmoji = this._emoji;
       this._emoji = it.getAttribute(`src`);
       if (this._emoji !== oldEmoji) {
-        this.rerender();
+        this.rerender(this);
       }
     }));
   }
 
-  _subscribeOnEvents() {
-    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistInputClickHandler);
-    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedInputClickHandler);
-    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteInputClickHandler);
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
+  recoveryListeners() {
 
-    this._onEmojiClick();
   }
 }

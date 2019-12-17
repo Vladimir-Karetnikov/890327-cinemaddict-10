@@ -4,7 +4,15 @@ import Sort, {SortType} from "../components/sort.js";
 import FilmsSection from '../components/films-section.js';
 import ShowMoreBtn from '../components/more-btn.js';
 import {render, RenderPosition} from '../utils/render.js';
-import {topRatedMovies, topCommentedMovies} from '../mock/data.js';
+
+const renderFilmCards = (movies, container, onDataChange, onViewChange) => {
+  return movies.map((movie) => {
+    const movieController = new MovieController(container, onDataChange, onViewChange);
+    movieController.render(movie);
+
+    return movieController;
+  });
+};
 
 export default class PageController {
   constructor(container) {
@@ -14,7 +22,9 @@ export default class PageController {
     this._filmSectionComponent = new FilmsSection();
     this._showMoreBtn = new ShowMoreBtn();
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
     this._movies = [];
+    this._showedMovieControllers = [];
   }
 
   render(movies) {
@@ -24,6 +34,7 @@ export default class PageController {
     const MOVIES_STARTING_COUNT = 5;
     this._movies = movies;
     const defaultList = this._movies.slice();
+    let newCards;
 
     if (this._movies.length === 0) {
       render(mainMoviesContainer, this._noDataComponent, RenderPosition.AFTERBEGIN);
@@ -46,13 +57,12 @@ export default class PageController {
 
         mainMoviesContainer.innerHTML = ``;
 
-        this._movies.slice(0, filmsLoaded).forEach((movie) => {
-          new MovieController(mainMoviesContainer, this._onDataChange).render(movie);
-        });
+        newCards = renderFilmCards(this._movies.slice(0, filmsLoaded), mainMoviesContainer, this._onDataChange, this._onViewChange);
+        this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
       });
-      this._movies.slice(0, MOVIES_STARTING_COUNT).forEach((movie) => {
-        new MovieController(mainMoviesContainer, this._onDataChange).render(movie);
-      });
+
+      newCards = renderFilmCards(this._movies.slice(0, MOVIES_STARTING_COUNT), mainMoviesContainer, this._onDataChange, this._onViewChange);
+      this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
       const filmsListSection = document.querySelector(`.films-list`);
       const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
@@ -64,8 +74,8 @@ export default class PageController {
         const prevMoviesCount = showingMoviesCount;
         showingMoviesCount = showingMoviesCount + SHOWING_MOVIES_COUNT_BY_BUTTON;
 
-        this._movies.slice(prevMoviesCount, showingMoviesCount)
-        .forEach((movie) => new MovieController(mainMoviesContainer, this._onDataChange).render(movie));
+        newCards = renderFilmCards(this._movies.slice(prevMoviesCount, showingMoviesCount), mainMoviesContainer, this._onDataChange, this._onViewChange);
+        this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
         if (showingMoviesCount >= movies.length) {
           this._showMoreBtn.removeElement();
@@ -73,22 +83,29 @@ export default class PageController {
       });
 
       const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
-      topRatedMovies.forEach((movie) => new MovieController(topRatedContainer, this._onDataChange).render(movie));
+      newCards = renderFilmCards(this._movies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
+      this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
       const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
-      topCommentedMovies.forEach((movie) => new MovieController(mostCommentedContainer, this._onDataChange).render(movie));
+      newCards = renderFilmCards(this._movies.sort((a, b) => b.commentsAmount - a.commentsAmount).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
+      this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
     }
   }
 
-  _onDataChange(movieController, oldData, newData) {
+  _onDataChange(oldData, newData) {
     const index = this._movies.findIndex((it) => it === oldData);
 
     if (index === -1) {
       return;
     }
 
+    const sameMovieControllers = this._showedMovieControllers.filter((it) => it._movieCard.movie === oldData);
     this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
 
-    movieController.render(this._movies[index]);
+    sameMovieControllers.forEach((it)=> it.rerender(this._movies[index]));
+  }
+
+  _onViewChange() {
+    this._showedMovieControllers.forEach((it) => it.setDefaultView());
   }
 }

@@ -1,5 +1,9 @@
-export const KeyCodes = {
-  ESC: 27
+const ESC_KEYCODE = 27;
+
+export const isEscEvent = (evt, action) => {
+  if (evt.keyCode === ESC_KEYCODE) {
+    action();
+  }
 };
 
 export const RenderPosition = {
@@ -22,17 +26,5 @@ export const render = (container, component, place) => {
     case RenderPosition.BEFOREEND:
       container.append(component.getElement());
       break;
-  }
-};
-
-export const replaceComponent = (newComponent, oldComponent) => {
-  const parentElement = oldComponent.getElement().parentElement;
-  const newElement = newComponent.getElement();
-  const oldElement = oldComponent.getElement();
-
-  const isExistElements = !!(parentElement && newElement && oldElement);
-
-  if (isExistElements && parentElement.contains(oldElement)) {
-    parentElement.replaceChild(newElement, oldElement);
   }
 };
