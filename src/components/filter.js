@@ -1,4 +1,4 @@
-import AbstractSmartComponent from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 
 export const FilterType = {
   ALL: `all`,
@@ -7,7 +7,7 @@ export const FilterType = {
   FAVORITES: `favorites`
 };
 
-export default class Filter extends AbstractSmartComponent {
+export default class Filter extends AbstractComponent {
 
   constructor(inWatchlist, inHistory, inFavorites) {
     super();

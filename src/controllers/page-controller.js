@@ -6,6 +6,7 @@ import ShowMoreBtn from '../components/more-btn.js';
 import {render, RenderPosition} from '../utils/render.js';
 
 const MOVIES_STARTING_COUNT = 5;
+const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
 
 const renderFilmCards = (movies, container, onDataChange, onViewChange) => {
   return movies.map((movie) => {
@@ -29,6 +30,8 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
+    this._showingMoviesCount = MOVIES_STARTING_COUNT;
     this._showedMovieControllers = [];
     this._moviesModel.setFilterChangeHandler(this._onFilterChange);
   }
@@ -99,24 +102,15 @@ export default class PageController {
   }
 
   _renderLoadMoreButton() {
+    this._showMoreBtn.removeElement();
+    if (this._showingMoviesCount >= this._moviesModel.getMovies().length) {
+      return;
+    }
     const filmsListSection = document.querySelector(`.films-list`);
-    const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
-    const movies = this._moviesModel.getMovies();
-    let showingMoviesCount = 5;
 
     render(filmsListSection, this._showMoreBtn, RenderPosition.BEFOREEND);
 
-    this._showMoreBtn.getElement().addEventListener(`click`, () => {
-      const prevMoviesCount = showingMoviesCount;
-
-      showingMoviesCount = showingMoviesCount + SHOWING_MOVIES_COUNT_BY_BUTTON;
-      this._renderMovies(movies.slice(prevMoviesCount, showingMoviesCount));
-
-
-      if (showingMoviesCount >= movies.length) {
-        this._showMoreBtn.removeElement();
-      }
-    });
+    this._showMoreBtn.getElement().addEventListener(`click`, this._onLoadMoreButtonClick);
   }
 
   _onFilterChange() {
@@ -136,5 +130,18 @@ export default class PageController {
 
     let newCards = renderFilmCards(movies.slice(0, MOVIES_STARTING_COUNT), mainMoviesContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
+  }
+
+  _onLoadMoreButtonClick() {
+    const prevMoviesCount = MOVIES_STARTING_COUNT;
+    const movies = this._moviesModel.getMovies();
+
+    this._showingMoviesCount = this._showingMoviesCount + SHOWING_MOVIES_COUNT_BY_BUTTON;
+
+    this._renderMovies(movies.slice(prevMoviesCount, this._showingMoviesCount));
+
+    if (this._showingMoviesCount >= movies.length) {
+      this._showMoreBtn.removeElement();
+    }
   }
 }
