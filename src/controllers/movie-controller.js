@@ -38,6 +38,7 @@ export default class MovieController {
 
   _setComponentsClickHandlers(movie) {
     this._movieCard.setPopupOpener(this._onFilmCardElementClick);
+    this._MoviePopup.onEmojiClick();
 
     this._movieCard.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();

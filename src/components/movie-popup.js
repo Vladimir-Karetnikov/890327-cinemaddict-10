@@ -235,6 +235,7 @@ export default class MoviePopup extends AbstractSmartComponent {
   }
 
   setCloseClickHandler(handler) {
+    this._closeBtnClickHandler = handler;
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
   }
@@ -266,6 +267,11 @@ export default class MoviePopup extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistInputClickHandler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedInputClickHandler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteInputClickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
 
+    this.onEmojiClick();
   }
 }

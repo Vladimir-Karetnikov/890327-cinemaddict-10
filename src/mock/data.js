@@ -210,6 +210,7 @@ const compareRandom = () => {
 
 const generateMovieCard = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(titles),
     originalTitle: getRandomArrayItem(titles),
     rating: getRandomIntegerNumber(0, 9),
@@ -224,8 +225,8 @@ const generateMovieCard = () => {
     description: description.sort(compareRandom).slice(0, getRandomIntegerNumber(1, description.length - 1)),
     poster: getRandomArrayItem(posters),
     ageRestriction: `${getRandomIntegerNumber(0, 18)}+`,
-    commentsAmount: getRandomIntegerNumber(0, 100),
     comments: comments.sort(compareRandom).slice(0, getRandomIntegerNumber(1, comments.length - 1)),
+    commentsAmount: getRandomIntegerNumber(0, 100),
     onWatchList: Math.random() >= 0.5,
     onHistory: Math.random() >= 0.5,
     onFavorites: Math.random() >= 0.5
@@ -258,44 +259,4 @@ switch (true) {
     break;
 }
 
-const inWatchlist = movies.reduce((acc, movie) => movie.onWatchList === true ? ++acc : acc, 0);
-const inHistory = movies.reduce((acc, movie) => movie.onHistory === true ? ++acc : acc, 0);
-const inFavorites = movies.reduce((acc, movie) => movie.onFavorites === true ? ++acc : acc, 0);
-
-const menuTypes = [
-  {
-    'title': `All movies`,
-    'link': `all`,
-    'filmsCount': movies.length,
-    'modifiers': []
-  },
-  {
-    'title': `Watchlist`,
-    'link': `watchlist`,
-    'filmsCount': inWatchlist,
-    'modifiers': []
-  },
-  {
-    'title': `History`,
-    'link': `history`,
-    'filmsCount': inHistory,
-    'modifiers': []
-  },
-  {
-    'title': `Favorites`,
-    'link': `favorites`,
-    'filmsCount': inFavorites,
-    'modifiers': []
-  },
-  {
-    'title': `Stats`,
-    'link': `stats`,
-    'filmsCount': rank,
-    'modifiers': [
-      `additional`,
-      `active`
-    ]
-  }
-];
-
-export {generateMovieCard, movies, rankName, menuTypes, emojiList, controlsTypes};
+export {generateMovieCard, movies, rankName, emojiList, controlsTypes};
