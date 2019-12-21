@@ -42,7 +42,6 @@ export default class PageController {
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmSectionComponent, RenderPosition.BEFOREEND);
     const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
-    let newCards;
 
     if (movies.length === 0) {
       render(mainMoviesContainer, this._noDataComponent, RenderPosition.AFTERBEGIN);
@@ -53,14 +52,6 @@ export default class PageController {
       this._renderMovies(movies);
 
       this._renderLoadMoreButton();
-
-      const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
-      newCards = renderFilmCards(movies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
-      this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
-
-      const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
-      newCards = renderFilmCards(movies.sort((a, b) => b.commentsAmount - a.commentsAmount).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
-      this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
     }
   }
 
@@ -115,30 +106,44 @@ export default class PageController {
 
   _onFilterChange() {
     this._removeMovies();
-    this._renderMovies(this._moviesModel.getMovies().slice(0, MOVIES_STARTING_COUNT));
+    this._renderMovies(this._moviesModel.getMovies());
     this._renderLoadMoreButton();
   }
 
   _removeMovies() {
     const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
+    const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
+    const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
     mainMoviesContainer.innerHTML = ``;
+    topRatedContainer.innerHTML = ``;
+    mostCommentedContainer.innerHTML = ``;
     this._showedMovieControllers = [];
   }
 
   _renderMovies(movies) {
     const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
 
-    let newCards = renderFilmCards(movies.slice(0, MOVIES_STARTING_COUNT), mainMoviesContainer, this._onDataChange, this._onViewChange);
+    let newCards = renderFilmCards(movies.slice(0, this._showingMoviesCount), mainMoviesContainer, this._onDataChange, this._onViewChange);
+    this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
+
+    const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
+    newCards = renderFilmCards(movies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
+    this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
+
+    const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
+    newCards = renderFilmCards(movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
   }
 
   _onLoadMoreButtonClick() {
-    const prevMoviesCount = MOVIES_STARTING_COUNT;
+    const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
+    const prevMoviesCount = this._showingMoviesCount;
     const movies = this._moviesModel.getMovies();
 
     this._showingMoviesCount = this._showingMoviesCount + SHOWING_MOVIES_COUNT_BY_BUTTON;
 
-    this._renderMovies(movies.slice(prevMoviesCount, this._showingMoviesCount));
+    let newCards = renderFilmCards(movies.slice(prevMoviesCount, this._showingMoviesCount), mainMoviesContainer, this._onDataChange, this._onViewChange);
+    this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
     if (this._showingMoviesCount >= movies.length) {
       this._showMoreBtn.removeElement();

@@ -226,7 +226,6 @@ const generateMovieCard = () => {
     poster: getRandomArrayItem(posters),
     ageRestriction: `${getRandomIntegerNumber(0, 18)}+`,
     comments: comments.sort(compareRandom).slice(0, getRandomIntegerNumber(1, comments.length - 1)),
-    commentsAmount: getRandomIntegerNumber(0, 100),
     onWatchList: Math.random() >= 0.5,
     onHistory: Math.random() >= 0.5,
     onFavorites: Math.random() >= 0.5

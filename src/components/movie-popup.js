@@ -10,6 +10,8 @@ export default class MoviePopup extends AbstractSmartComponent {
     this._watchlistInputClickHandler = null;
     this._watchedInputClickHandler = null;
     this._favoriteInputClickHandler = null;
+    this._deleteCommentButtonHandler = null;
+    this._formHandler = null;
   }
 
   getEmojiListTemplate(emojis) {
@@ -266,11 +268,29 @@ export default class MoviePopup extends AbstractSmartComponent {
     }));
   }
 
+  setDeleteCommentButtonHandler(handler) {
+    this._deleteCommentButtonHandler = handler;
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+    });
+  }
+
+  setFormHandler(handler) {
+    this._formHandler = handler;
+    this.getElement().querySelector(`.film-details__inner`)
+      .addEventListener(`keydown`, handler);
+  }
+
   recoveryListeners() {
     this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistInputClickHandler);
     this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedInputClickHandler);
     this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteInputClickHandler);
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
+      item.addEventListener(`click`, this._deleteCommentButtonHandler);
+    });
+    this.getElement().querySelector(`.film-details__inner`)
+      .addEventListener(`keydown`, this._formHandler);
 
     this.onEmojiClick();
   }

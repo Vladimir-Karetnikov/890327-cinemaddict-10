@@ -81,6 +81,46 @@ export default class MovieController {
         onFavorites: !movie.onFavorites
       }));
     });
+
+    this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
+      evt.preventDefault();
+
+      const comment = evt.target.closest(`.film-details__comment`);
+
+      if (!comment) {
+        return;
+      }
+
+      const index = Array.from(this._MoviePopup.getElement().querySelectorAll(`.film-details__comment-delete`))
+        .findIndex((item) => item === comment);
+
+      movie.comments.splice(index, 1);
+
+      this._onDataChange(movie, Object.assign({}, movie));
+
+      comment.remove();
+    });
+
+    this._MoviePopup.setFormHandler((evt) => {
+      if (evt.ctrlKey && evt.key === `Enter`) {
+        const data = new Map(new FormData(evt.target.form));
+
+
+        const comment = data.get(`comment`);
+        const emoji = this._MoviePopup._emoji;
+
+        if (comment && emoji) {
+          movie.comments.unshift({
+            img: emoji,
+            text: comment,
+            author: `John Doe`,
+            day: new Date()
+          });
+
+          this._onDataChange(movie, Object.assign({}, movie));
+        }
+      }
+    });
   }
 
   _closeFilmDetails() {

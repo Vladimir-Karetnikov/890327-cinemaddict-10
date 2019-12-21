@@ -29,8 +29,13 @@ export default class Filter extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      const filterName = evt.target.dataset.filterType;
-      handler(filterName);
+      if (!evt.target.classList.contains(`main-navigation__item--active`)) {
+        this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
+        evt.target.classList.add(`main-navigation__item--active`);
+
+        const filterName = evt.target.dataset.filterType;
+        handler(filterName);
+      }
     });
   }
 }
