@@ -1,6 +1,7 @@
 import MovieCard from '../components/movie-card.js';
 import MoviePopup from '../components/movie-popup.js';
 import {render, RenderPosition, isEscEvent} from '../utils/render.js';
+import he from 'he';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -112,7 +113,7 @@ export default class MovieController {
         if (comment && emoji) {
           movie.comments.unshift({
             img: emoji,
-            text: comment,
+            text: he.encode(comment),
             author: `John Doe`,
             day: new Date()
           });
