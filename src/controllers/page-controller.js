@@ -49,7 +49,7 @@ export default class PageController {
     } else {
       this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
-      this._renderMovies(movies);
+      this._renderMovies(movies.slice(0, this._showingMoviesCount));
 
       this._renderLoadMoreButton();
     }
@@ -76,13 +76,13 @@ export default class PageController {
 
     switch (sortType) {
       case SortType.DATE:
-        sortedMovies = movies.sort((a, b) => b.date.slice(b.date.length - 4) - a.date.slice(a.date.length - 4));
+        sortedMovies = movies.slice().sort((a, b) => b.date.slice(b.date.length - 4) - a.date.slice(a.date.length - 4));
         break;
       case SortType.RATING:
-        sortedMovies = movies.sort((a, b) => b.rating - a.rating);
+        sortedMovies = movies.slice().sort((a, b) => b.rating - a.rating);
         break;
       case SortType.DEFAULT:
-        sortedMovies = movies.slice();
+        sortedMovies = movies.slice(0, MOVIES_STARTING_COUNT);
         break;
     }
 
@@ -90,6 +90,12 @@ export default class PageController {
 
     this._removeMovies();
     this._renderMovies(sortedMovies);
+
+    if (sortType === SortType.DEFAULT) {
+      this._renderLoadMoreButton();
+    } else {
+      this._showMoreBtn.removeElement();
+    }
   }
 
   _renderLoadMoreButton() {
@@ -106,7 +112,8 @@ export default class PageController {
 
   _onFilterChange() {
     this._removeMovies();
-    this._renderMovies(this._moviesModel.getMovies());
+    this._renderMovies(this._moviesModel.getMovies().slice(0, MOVIES_STARTING_COUNT));
+    this._showingMoviesCount = MOVIES_STARTING_COUNT;
     this._renderLoadMoreButton();
   }
 
@@ -122,16 +129,17 @@ export default class PageController {
 
   _renderMovies(movies) {
     const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
+    const extraMovies = this._moviesModel.getMovies();
 
-    let newCards = renderFilmCards(movies.slice(0, this._showingMoviesCount), mainMoviesContainer, this._onDataChange, this._onViewChange);
+    let newCards = renderFilmCards(movies, mainMoviesContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
     const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
-    newCards = renderFilmCards(movies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
+    newCards = renderFilmCards(extraMovies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
     const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
-    newCards = renderFilmCards(movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
+    newCards = renderFilmCards(extraMovies.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
   }
 
