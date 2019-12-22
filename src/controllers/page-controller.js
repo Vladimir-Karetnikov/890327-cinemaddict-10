@@ -138,4 +138,14 @@ export default class PageController {
       this._showMoreBtn.removeElement();
     }
   }
+
+  show() {
+    document.querySelector(`.sort`).classList.remove(`visually-hidden`);
+    document.querySelector(`.films`).classList.remove(`visually-hidden`);
+  }
+
+  hide() {
+    document.querySelector(`.sort`).classList.add(`visually-hidden`);
+    document.querySelector(`.films`).classList.add(`visually-hidden`);
+  }
 }

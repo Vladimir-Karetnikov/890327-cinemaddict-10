@@ -4,6 +4,7 @@ import FilterController from './controllers/filter-controller.js';
 import Profile from './components/profile.js';
 import Footer from './components/footer.js';
 import PageController from './controllers/page-controller.js';
+import Stats from './components/stats.js';
 import {render, RenderPosition} from './utils/render.js';
 
 const moviesModel = new MoviesModel();
@@ -14,9 +15,20 @@ render(siteHeaderElement, new Profile(), RenderPosition.BEFOREEND);
 const siteMainElement = document.querySelector(`.main`);
 
 const filterController = new FilterController(siteMainElement, moviesModel);
+filterController.setPageChangeHandler(() => {
+  pageController.hide();
+  statsComponent.show();
+}, () => {
+  pageController.show();
+  statsComponent.hide();
+});
 filterController.render();
 
 render(document.body, new Footer(), RenderPosition.BEFOREEND);
 
-const Pagecontroller = new PageController(siteMainElement, moviesModel);
-Pagecontroller.render();
+const pageController = new PageController(siteMainElement, moviesModel);
+const statsComponent = new Stats();
+
+pageController.render();
+render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
+statsComponent.hide();
