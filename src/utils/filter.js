@@ -1,4 +1,5 @@
 import {FilterType} from '../components/filter.js';
+import {SortType} from '../components/sort.js';
 
 export const getMoviesByFilter = (movies, filterType) => {
 
@@ -11,6 +12,20 @@ export const getMoviesByFilter = (movies, filterType) => {
       return movies.filter((movie) => movie.onHistory);
     case FilterType.FAVORITES:
       return movies.filter((movie) => movie.onFavorites);
+  }
+
+  return movies;
+};
+
+export const getSortedMovies = (movies, sortType) => {
+
+  switch (sortType) {
+    case SortType.DATE:
+      return movies.slice().sort((a, b) => b.date.slice(b.date.length - 4) - a.date.slice(a.date.length - 4));
+    case SortType.RATING:
+      return movies.slice().sort((a, b) => b.rating - a.rating);
+    case SortType.DEFAULT:
+      return movies.slice();
   }
 
   return movies;

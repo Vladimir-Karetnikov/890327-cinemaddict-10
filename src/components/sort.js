@@ -29,7 +29,6 @@ export default class Sort extends AbstractComponent {
         evt.target.classList.add(`sort__button--active`);
 
         this._currenSortType = evt.target.dataset.sortType;
-
         handler(this._currenSortType);
       }
     });
