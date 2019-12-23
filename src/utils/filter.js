@@ -21,7 +21,7 @@ export const getSortedMovies = (movies, sortType) => {
 
   switch (sortType) {
     case SortType.DATE:
-      return movies.slice().sort((a, b) => b.date.slice(b.date.length - 4) - a.date.slice(a.date.length - 4));
+      return movies.slice().sort((a, b) => b.releaseDate - a.releaseDate);
     case SortType.RATING:
       return movies.slice().sort((a, b) => b.rating - a.rating);
     case SortType.DEFAULT:

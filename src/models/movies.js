@@ -25,6 +25,19 @@ export default class MoviesModel {
     this._movies = movies;
   }
 
+  getRank() {
+    let watchedMovies = this._movies.reduce((acc, movie) => movie.onHistory === true ? ++acc : acc, 0);
+    if (watchedMovies > 21) {
+      return `Movie Buff`;
+    } else if (watchedMovies > 10) {
+      return `Fan`;
+    } else if (watchedMovies > 0) {
+      return `Novice`;
+    } else {
+      return ``;
+    }
+  }
+
   updateMovie(id, movie) {
     const index = this._movies.findIndex((it) => it.id === id);
 

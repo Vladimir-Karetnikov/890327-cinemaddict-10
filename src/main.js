@@ -11,13 +11,16 @@ const moviesModel = new MoviesModel();
 moviesModel.setMovies(movies);
 
 const siteHeaderElement = document.querySelector(`.header`);
-render(siteHeaderElement, new Profile(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new Profile(moviesModel), RenderPosition.BEFOREEND);
+
 const siteMainElement = document.querySelector(`.main`);
+const statsComponent = new Stats(moviesModel);
 
 const filterController = new FilterController(siteMainElement, moviesModel);
 filterController.setPageChangeHandler(() => {
   pageController.hide();
   statsComponent.show();
+  statsComponent.renderChart();
 }, () => {
   pageController.show();
   statsComponent.hide();
@@ -27,7 +30,6 @@ filterController.render();
 render(document.body, new Footer(), RenderPosition.BEFOREEND);
 
 const pageController = new PageController(siteMainElement, moviesModel);
-const statsComponent = new Stats();
 
 pageController.render();
 render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);

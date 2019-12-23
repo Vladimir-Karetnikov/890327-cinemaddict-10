@@ -75,21 +75,6 @@ const writers = [
   `Darko Macan`
 ];
 
-const monthNames = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`,
-];
-
 const countrys = [
   `Malawi`,
   `Malaysia`,
@@ -209,6 +194,12 @@ const compareRandom = () => {
 };
 
 const generateMovieCard = () => {
+  const releaseDate = new Date(new Date().setDate(new Date().getDate() - Math.floor(Math.random() * 10000)));
+
+  const watchedDateCalc = new Date(new Date().setDate(new Date().getDate() - (Math.random() * Math.round((new Date() - releaseDate) / (1000 * 60 * 60 * 24)))));
+
+  const onHistory = Math.random() > 0.5;
+
   return {
     id: String(new Date() + Math.random()),
     title: getRandomArrayItem(titles),
@@ -218,8 +209,9 @@ const generateMovieCard = () => {
     director: getRandomArrayItem(directors),
     writers: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 3)),
     actors: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 5)),
-    date: `${getRandomIntegerNumber(0, 30)} ${getRandomArrayItem(monthNames)} ${getRandomIntegerNumber(1950, 2019)}`,
-    runtime: `1h ${getRandomIntegerNumber(1, 59)}m`,
+    releaseDate,
+    watchedDate: onHistory ? watchedDateCalc : null,
+    runtime: getRandomIntegerNumber(30, 200),
     country: getRandomArrayItem(countrys),
     genres: genres.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 3)),
     description: description.sort(compareRandom).slice(0, getRandomIntegerNumber(1, description.length - 1)),
@@ -227,7 +219,7 @@ const generateMovieCard = () => {
     ageRestriction: `${getRandomIntegerNumber(0, 18)}+`,
     comments: comments.sort(compareRandom).slice(0, getRandomIntegerNumber(1, comments.length - 1)),
     onWatchList: Math.random() >= 0.5,
-    onHistory: Math.random() >= 0.5,
+    onHistory,
     onFavorites: Math.random() >= 0.5
   };
 };

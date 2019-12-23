@@ -21,6 +21,10 @@ export default class AbstractComponent {
     return this._element;
   }
 
+  setElement(element) {
+    this._element = element;
+  }
+
   removeElement() {
     if (this._element !== null) {
       this._element.remove();

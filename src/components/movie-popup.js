@@ -1,5 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {emojiList} from '../mock/data.js';
+import {getFilmDuration} from '../utils/utils.js';
+import moment from 'moment';
 
 export default class MoviePopup extends AbstractSmartComponent {
   constructor(movie) {
@@ -165,7 +167,7 @@ export default class MoviePopup extends AbstractSmartComponent {
               Release Date
             </td>
             <td class="film-details__cell">
-            ${this._movie.date}
+            ${moment(this._movie.releaseDate).format(`DD MMMM YYYY`)}
             </td>
           </tr>
           <tr class="film-details__row">
@@ -173,7 +175,7 @@ export default class MoviePopup extends AbstractSmartComponent {
               Runtime
             </td>
             <td class="film-details__cell">
-              ${this._movie.runtime}
+              ${getFilmDuration(this._movie.runtime)}
             </td>
           </tr>
           <tr class="film-details__row">
