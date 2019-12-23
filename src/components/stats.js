@@ -117,43 +117,52 @@ export default class Stat extends AbstractComponent {
   constructor(moviesModel) {
     super();
     this._moviesModel = moviesModel;
-    this._films = moviesModel.getAllMovies().filter((el) => el.onHistory);
+    this._films = this._moviesModel.getAllMovies().filter((el) => el.onHistory);
     this._filteredData = this._films;
+    this._currentFilter = `all-time`;
+    this._onDataChange = this._onDataChange.bind(this);
+    this._moviesModel.setDataChangeHandler(this._onDataChange);
+
     this._filterChangeHandler = (evt) => {
       switch (evt.target.value) {
         case `week`:
           this._filteredData = getWeekData(this._films);
+          this._currentFilter = `week`;
           this.rerender();
           break;
         case `today`:
           this._filteredData = getTodayData(this._films);
+          this._currentFilter = `today`;
           this.rerender();
           break;
         case `year`:
           this._filteredData = getYearData(this._films);
+          this._currentFilter = `year`;
           this.rerender();
           break;
         case `month`:
           this._filteredData = getMonthData(this._films);
+          this._currentFilter = `month`;
           this.rerender();
           break;
         default:
           this._filteredData = this._films;
+          this._currentFilter = `all-time`;
           this.rerender();
       }
     };
+  }
 
-    this.rerender = () => {
-      const oldElement = this.getElement();
-      const parent = oldElement.parentElement;
+  rerender() {
+    const oldElement = this.getElement();
+    const parent = oldElement.parentElement;
 
-      this._element = null;
+    this._element = null;
 
-      const newElement = this.getElement();
+    const newElement = this.getElement();
 
-      parent.replaceChild(newElement, oldElement);
-      renderChart(this._filteredData);
-    };
+    parent.replaceChild(newElement, oldElement);
+    this.renderChart(this._filteredData);
   }
 
   getTemplate() {
@@ -171,15 +180,15 @@ export default class Stat extends AbstractComponent {
         </p>
         <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
           <p class="statistic__filters-description">Show stats:</p>
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" ${this._currentFilter === `all-time` ? `checked` : ``}>
           <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today" ${this._currentFilter === `today` ? `checked` : ``}>
           <label for="statistic-today" class="statistic__filters-label">Today</label>
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week" ${this._currentFilter === `week` ? `checked` : ``}>
           <label for="statistic-week" class="statistic__filters-label">Week</label>
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month" ${this._currentFilter === `month` ? `checked` : ``}>
           <label for="statistic-month" class="statistic__filters-label">Month</label>
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year" ${this._currentFilter === `year` ? `checked` : ``}>
           <label for="statistic-year" class="statistic__filters-label">Year</label>
         </form>
         <div class= "statistic__updated-wrapper">
@@ -213,8 +222,14 @@ export default class Stat extends AbstractComponent {
   }
 
   renderChart() {
-    renderChart(this._films);
+    renderChart(this._filteredData);
     this.setFilterListener();
+  }
+
+  _onDataChange() {
+    this._films = this._moviesModel.getAllMovies().filter((el) => el.onHistory);
+    this._filteredData = this._films;
+    this.rerender();
   }
 
   show() {
