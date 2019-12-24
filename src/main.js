@@ -33,4 +33,3 @@ const pageController = new PageController(siteMainElement, moviesModel);
 
 pageController.render();
 render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
-statsComponent.hide();

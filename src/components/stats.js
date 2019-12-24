@@ -122,6 +122,7 @@ export default class Stat extends AbstractComponent {
     this._currentFilter = `all-time`;
     this._onDataChange = this._onDataChange.bind(this);
     this._moviesModel.setDataChangeHandler(this._onDataChange);
+    this._isHidden = true;
 
     this._filterChangeHandler = (evt) => {
       switch (evt.target.value) {
@@ -172,7 +173,7 @@ export default class Stat extends AbstractComponent {
 
     const totalDuration = moment.duration(this._filteredData.reduce((acc, el) => acc + (el.runtime * 60 * 1000), 0));
 
-    return (`<section class="statistic">
+    return (`<section class="statistic ${this._isHidden ? `visually-hidden` : ``}">
         <p class="statistic__rank">
           Your rank
           <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -229,14 +230,17 @@ export default class Stat extends AbstractComponent {
   _onDataChange() {
     this._films = this._moviesModel.getAllMovies().filter((el) => el.onHistory);
     this._filteredData = this._films;
+    this._currentFilter = `all-time`;
     this.rerender();
   }
 
   show() {
     document.querySelector(`.statistic`).classList.remove(`visually-hidden`);
+    this._isHidden = false;
   }
 
   hide() {
     document.querySelector(`.statistic`).classList.add(`visually-hidden`);
+    this._isHidden = true;
   }
 }

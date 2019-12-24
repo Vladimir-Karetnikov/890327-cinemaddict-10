@@ -2,6 +2,7 @@ import MovieCard from '../components/movie-card.js';
 import MoviePopup from '../components/movie-popup.js';
 import {render, RenderPosition, isEscEvent} from '../utils/render.js';
 import he from 'he';
+import moment from 'moment';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -51,7 +52,9 @@ export default class MovieController {
     this._movieCard.setWatchedButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(movie, Object.assign({}, movie, {
-        onHistory: !movie.onHistory
+        onHistory: !movie.onHistory,
+        userRating: movie.onHistory ? movie.userRating : null,
+        watchedDate: !movie.onHistory ? moment() : null
       }));
     });
 
@@ -72,7 +75,9 @@ export default class MovieController {
     this._MoviePopup.setWatchedInputClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(movie, Object.assign({}, movie, {
-        onHistory: !movie.onHistory
+        onHistory: !movie.onHistory,
+        userRating: movie.onHistory ? movie.userRating : null,
+        watchedDate: !movie.onHistory ? moment() : null
       }));
     });
 
@@ -121,6 +126,21 @@ export default class MovieController {
           this._onDataChange(movie, Object.assign({}, movie));
         }
       }
+    });
+
+    this._MoviePopup.setRatingHandler((evt) => {
+      let newRating = parseInt(evt.target.value, 10);
+      this._onDataChange(movie, Object.assign({}, movie, {
+        userRating: newRating
+      }));
+    });
+
+    this._MoviePopup.setRatingResetHandler((evt) => {
+      evt.preventDefault();
+
+      this._onDataChange(movie, Object.assign({}, movie, {
+        userRating: null
+      }));
     });
   }
 

@@ -13,7 +13,7 @@ export default class MoviesModel {
   }
 
   getMovies() {
-    let filteredMovies = getMoviesByFilter(this._movies, this._activeFilterType);
+    const filteredMovies = getMoviesByFilter(this._movies, this._activeFilterType);
     return getSortedMovies(filteredMovies, this._activeSortType);
   }
 
@@ -26,7 +26,7 @@ export default class MoviesModel {
   }
 
   getRank() {
-    let watchedMovies = this._movies.reduce((acc, movie) => movie.onHistory === true ? ++acc : acc, 0);
+    const watchedMovies = this._movies.reduce((acc, movie) => movie.onHistory ? ++acc : acc, 0);
     if (watchedMovies > 21) {
       return `Movie Buff`;
     } else if (watchedMovies > 10) {

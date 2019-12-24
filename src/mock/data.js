@@ -205,7 +205,7 @@ const generateMovieCard = () => {
     title: getRandomArrayItem(titles),
     originalTitle: getRandomArrayItem(titles),
     rating: getRandomIntegerNumber(0, 9),
-    userRating: getRandomIntegerNumber(0, 9),
+    userRating: getRandomIntegerNumber(1, 9),
     director: getRandomArrayItem(directors),
     writers: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 3)),
     actors: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 5)),

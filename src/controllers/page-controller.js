@@ -62,6 +62,7 @@ export default class PageController {
     if (isSuccess) {
       const sameMovieControllers = this._showedMovieControllers.filter((it) => it._movieCard.movie.id === oldData.id);
       sameMovieControllers.forEach((it)=> it.rerender(isSuccess));
+      this._renderTopMovies();
     }
   }
 
@@ -110,16 +111,23 @@ export default class PageController {
 
   _renderMovies(movies) {
     const mainMoviesContainer = document.querySelector(`.films-list > .films-list__container`);
-    const extraMovies = this._moviesModel.getMovies();
 
     let newCards = renderFilmCards(movies, mainMoviesContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
+    this._renderTopMovies();
+  }
+
+  _renderTopMovies() {
     const topRatedContainer = document.querySelector(`body > main > section > section:nth-child(2) > div`);
-    newCards = renderFilmCards(extraMovies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
+    const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
+    topRatedContainer.innerHTML = ``;
+    mostCommentedContainer.innerHTML = ``;
+    const extraMovies = this._moviesModel.getMovies();
+
+    let newCards = renderFilmCards(extraMovies.sort((a, b) => b.rating - a.rating).slice(0, 2), topRatedContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
-    const mostCommentedContainer = document.querySelector(`body > main > section > section:nth-child(3) > div`);
     newCards = renderFilmCards(extraMovies.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2), mostCommentedContainer, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
   }
