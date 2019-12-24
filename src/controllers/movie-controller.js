@@ -1,6 +1,8 @@
 import MovieCard from '../components/movie-card.js';
 import MoviePopup from '../components/movie-popup.js';
 import {render, RenderPosition, isEscEvent} from '../utils/render.js';
+import he from 'he';
+import moment from 'moment';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -38,6 +40,7 @@ export default class MovieController {
 
   _setComponentsClickHandlers(movie) {
     this._movieCard.setPopupOpener(this._onFilmCardElementClick);
+    this._MoviePopup.onEmojiClick();
 
     this._movieCard.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
@@ -49,7 +52,9 @@ export default class MovieController {
     this._movieCard.setWatchedButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(movie, Object.assign({}, movie, {
-        onHistory: !movie.onHistory
+        onHistory: !movie.onHistory,
+        userRating: movie.onHistory ? movie.userRating : null,
+        watchedDate: !movie.onHistory ? moment() : null
       }));
     });
 
@@ -70,7 +75,9 @@ export default class MovieController {
     this._MoviePopup.setWatchedInputClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(movie, Object.assign({}, movie, {
-        onHistory: !movie.onHistory
+        onHistory: !movie.onHistory,
+        userRating: movie.onHistory ? movie.userRating : null,
+        watchedDate: !movie.onHistory ? moment() : null
       }));
     });
 
@@ -78,6 +85,61 @@ export default class MovieController {
       evt.preventDefault();
       this._onDataChange(movie, Object.assign({}, movie, {
         onFavorites: !movie.onFavorites
+      }));
+    });
+
+    this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
+      evt.preventDefault();
+
+      const comment = evt.target.closest(`.film-details__comment`);
+
+      if (!comment) {
+        return;
+      }
+
+      const index = Array.from(this._MoviePopup.getElement().querySelectorAll(`.film-details__comment-delete`))
+        .findIndex((item) => item === comment);
+
+      movie.comments.splice(index, 1);
+
+      this._onDataChange(movie, Object.assign({}, movie));
+
+      comment.remove();
+    });
+
+    this._MoviePopup.setFormHandler((evt) => {
+      if (evt.ctrlKey && evt.key === `Enter`) {
+        const data = new Map(new FormData(evt.target.form));
+
+
+        const comment = data.get(`comment`);
+        const emoji = this._MoviePopup._emoji;
+
+        if (comment && emoji) {
+          movie.comments.unshift({
+            img: emoji,
+            text: he.encode(comment),
+            author: `John Doe`,
+            day: new Date()
+          });
+
+          this._onDataChange(movie, Object.assign({}, movie));
+        }
+      }
+    });
+
+    this._MoviePopup.setRatingHandler((evt) => {
+      let newRating = parseInt(evt.target.value, 10);
+      this._onDataChange(movie, Object.assign({}, movie, {
+        userRating: newRating
+      }));
+    });
+
+    this._MoviePopup.setRatingResetHandler((evt) => {
+      evt.preventDefault();
+
+      this._onDataChange(movie, Object.assign({}, movie, {
+        userRating: null
       }));
     });
   }

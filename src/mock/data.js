@@ -75,21 +75,6 @@ const writers = [
   `Darko Macan`
 ];
 
-const monthNames = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`,
-];
-
 const countrys = [
   `Malawi`,
   `Malaysia`,
@@ -209,25 +194,32 @@ const compareRandom = () => {
 };
 
 const generateMovieCard = () => {
+  const releaseDate = new Date(new Date().setDate(new Date().getDate() - Math.floor(Math.random() * 10000)));
+
+  const watchedDateCalc = new Date(new Date().setDate(new Date().getDate() - (Math.random() * Math.round((new Date() - releaseDate) / (1000 * 60 * 60 * 24)))));
+
+  const onHistory = Math.random() > 0.5;
+
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(titles),
     originalTitle: getRandomArrayItem(titles),
     rating: getRandomIntegerNumber(0, 9),
-    userRating: getRandomIntegerNumber(0, 9),
+    userRating: getRandomIntegerNumber(1, 9),
     director: getRandomArrayItem(directors),
     writers: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 3)),
     actors: writers.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 5)),
-    date: `${getRandomIntegerNumber(0, 30)} ${getRandomArrayItem(monthNames)} ${getRandomIntegerNumber(1950, 2019)}`,
-    runtime: `1h ${getRandomIntegerNumber(1, 59)}m`,
+    releaseDate,
+    watchedDate: onHistory ? watchedDateCalc : null,
+    runtime: getRandomIntegerNumber(30, 200),
     country: getRandomArrayItem(countrys),
     genres: genres.sort(compareRandom).slice(0, getRandomIntegerNumber(1, 3)),
     description: description.sort(compareRandom).slice(0, getRandomIntegerNumber(1, description.length - 1)),
     poster: getRandomArrayItem(posters),
     ageRestriction: `${getRandomIntegerNumber(0, 18)}+`,
-    commentsAmount: getRandomIntegerNumber(0, 100),
     comments: comments.sort(compareRandom).slice(0, getRandomIntegerNumber(1, comments.length - 1)),
     onWatchList: Math.random() >= 0.5,
-    onHistory: Math.random() >= 0.5,
+    onHistory,
     onFavorites: Math.random() >= 0.5
   };
 };
@@ -258,44 +250,4 @@ switch (true) {
     break;
 }
 
-const inWatchlist = movies.reduce((acc, movie) => movie.onWatchList === true ? ++acc : acc, 0);
-const inHistory = movies.reduce((acc, movie) => movie.onHistory === true ? ++acc : acc, 0);
-const inFavorites = movies.reduce((acc, movie) => movie.onFavorites === true ? ++acc : acc, 0);
-
-const menuTypes = [
-  {
-    'title': `All movies`,
-    'link': `all`,
-    'filmsCount': movies.length,
-    'modifiers': []
-  },
-  {
-    'title': `Watchlist`,
-    'link': `watchlist`,
-    'filmsCount': inWatchlist,
-    'modifiers': []
-  },
-  {
-    'title': `History`,
-    'link': `history`,
-    'filmsCount': inHistory,
-    'modifiers': []
-  },
-  {
-    'title': `Favorites`,
-    'link': `favorites`,
-    'filmsCount': inFavorites,
-    'modifiers': []
-  },
-  {
-    'title': `Stats`,
-    'link': `stats`,
-    'filmsCount': rank,
-    'modifiers': [
-      `additional`,
-      `active`
-    ]
-  }
-];
-
-export {generateMovieCard, movies, rankName, menuTypes, emojiList, controlsTypes};
+export {generateMovieCard, movies, rankName, emojiList, controlsTypes};

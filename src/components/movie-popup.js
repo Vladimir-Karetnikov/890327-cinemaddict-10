@@ -1,5 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {emojiList} from '../mock/data.js';
+import {getFilmDuration} from '../utils/utils.js';
+import moment from 'moment';
 
 export default class MoviePopup extends AbstractSmartComponent {
   constructor(movie) {
@@ -10,6 +12,10 @@ export default class MoviePopup extends AbstractSmartComponent {
     this._watchlistInputClickHandler = null;
     this._watchedInputClickHandler = null;
     this._favoriteInputClickHandler = null;
+    this._deleteCommentButtonHandler = null;
+    this._ratingHandler = null;
+    this._ratingResetHandler = null;
+    this._formHandler = null;
   }
 
   getEmojiListTemplate(emojis) {
@@ -78,23 +84,23 @@ export default class MoviePopup extends AbstractSmartComponent {
               <h3 class="film-details__user-rating-title">${this._movie.title}</h3>
               <p class="film-details__user-rating-feelings">How you feel it?</p>
               <div class="film-details__user-rating-score">
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1" ${this._movie.userRating === 1 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-1">1</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2" ${this._movie.userRating === 2 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-2">2</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3" ${this._movie.userRating === 3 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-3">3</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4" ${this._movie.userRating === 4 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-4">4</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" ${this._movie.userRating === 5 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-5">5</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6" ${this._movie.userRating === 6 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-6">6</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7" ${this._movie.userRating === 7 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-7">7</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8" ${this._movie.userRating === 8 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-8">8</label>
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked>
+                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" ${this._movie.userRating === 9 ? `checked` : ``}>
                 <label class="film-details__user-rating-label" for="rating-9">9</label>
               </div>
             </section>
@@ -163,7 +169,7 @@ export default class MoviePopup extends AbstractSmartComponent {
               Release Date
             </td>
             <td class="film-details__cell">
-            ${this._movie.date}
+            ${moment(this._movie.releaseDate).format(`DD MMMM YYYY`)}
             </td>
           </tr>
           <tr class="film-details__row">
@@ -171,7 +177,7 @@ export default class MoviePopup extends AbstractSmartComponent {
               Runtime
             </td>
             <td class="film-details__cell">
-              ${this._movie.runtime}
+              ${getFilmDuration(this._movie.runtime)}
             </td>
           </tr>
           <tr class="film-details__row">
@@ -235,6 +241,7 @@ export default class MoviePopup extends AbstractSmartComponent {
   }
 
   setCloseClickHandler(handler) {
+    this._closeBtnClickHandler = handler;
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
   }
@@ -265,7 +272,52 @@ export default class MoviePopup extends AbstractSmartComponent {
     }));
   }
 
-  recoveryListeners() {
+  setDeleteCommentButtonHandler(handler) {
+    this._deleteCommentButtonHandler = handler;
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+    });
+  }
 
+  setFormHandler(handler) {
+    this._formHandler = handler;
+    this.getElement().querySelector(`.film-details__inner`)
+      .addEventListener(`keydown`, handler);
+  }
+
+  setRatingHandler(handler) {
+    this._ratingHandler = handler;
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+    });
+  }
+
+  setRatingResetHandler(handler) {
+    this._ratingResetHandler = handler;
+    if (this.getElement().querySelector(`.film-details__watched-reset`)) {
+      this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, handler);
+    }
+  }
+
+  recoveryListeners() {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistInputClickHandler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedInputClickHandler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteInputClickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
+      item.addEventListener(`click`, this._deleteCommentButtonHandler);
+    });
+    this.getElement().querySelector(`.film-details__inner`)
+      .addEventListener(`keydown`, this._formHandler);
+
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((item) => {
+      item.addEventListener(`click`, this._ratingHandler);
+    });
+
+    if (this.getElement().querySelector(`.film-details__watched-reset`)) {
+      this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, this._ratingResetHandler);
+    }
+
+    this.onEmojiClick();
   }
 }
