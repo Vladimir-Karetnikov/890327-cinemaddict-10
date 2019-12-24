@@ -3,6 +3,7 @@ import MoviePopup from '../components/movie-popup.js';
 import {render, RenderPosition, isEscEvent} from '../utils/render.js';
 import he from 'he';
 import moment from 'moment';
+import Movie from '../models/movie.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -44,9 +45,10 @@ export default class MovieController {
 
     this._movieCard.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
-        onWatchList: !movie.onWatchList
-      }));
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {onWatchList: !movie.onWatchList});
+      console.log(JSON.stringify(updatedMovie.toRAW()))
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._movieCard.setWatchedButtonClickHandler((evt) => {

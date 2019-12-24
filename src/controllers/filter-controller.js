@@ -15,8 +15,7 @@ export default class FilterController {
 
     this._moviesModel.setDataChangeHandler(this._onDataChange);
 
-    this._openStatsHandler = null;
-    this._closeStatsHandler = null;
+    this._pageSwapHandler = null;
   }
 
   render() {
@@ -30,7 +29,7 @@ export default class FilterController {
 
     this._filterComponent = new Filter(inWatchlist, inHistory, inFavorites);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
-    this._filterComponent.setPageChangeHandler(this._openStatsHandler, this._closeStatsHandler);
+    this._filterComponent.setPageChangeHandler(this._pageSwapHandler);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
@@ -48,8 +47,7 @@ export default class FilterController {
     this.render();
   }
 
-  setPageChangeHandler(openStatsHandler, closeStatsHandler) {
-    this._openStatsHandler = openStatsHandler;
-    this._closeStatsHandler = closeStatsHandler;
+  setPageChangeHandler(handler) {
+    this._pageSwapHandler = handler;
   }
 }

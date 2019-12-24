@@ -18,7 +18,7 @@ const renderFilmCards = (movies, container, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
 
@@ -37,6 +37,7 @@ export default class PageController {
     this._showedMovieControllers = [];
     this._moviesModel.setFilterChangeHandler(this._onFilterChange);
     this._moviesModel.setSortChangeHandler(this._sortChangeHandler);
+    this._api = api;
   }
 
   render() {
@@ -57,13 +58,18 @@ export default class PageController {
   }
 
   _onDataChange(oldData, newData) {
-    const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
+    this._api.updateMovie(oldData.id, newData)
+          .then((updatedMovie) => {
+            const isSuccess = this._moviesModel.updateMovie(oldData.id, updatedMovie);
 
-    if (isSuccess) {
-      const sameMovieControllers = this._showedMovieControllers.filter((it) => it._movieCard.movie.id === oldData.id);
-      sameMovieControllers.forEach((it)=> it.rerender(isSuccess));
-      this._renderTopMovies();
-    }
+            if (isSuccess) {
+              const sameMovieControllers = this._showedMovieControllers.filter((it) => it._movieCard.movie.id === oldData.id);
+              sameMovieControllers.forEach((it)=> it.rerender(updatedMovie));
+              this._renderTopMovies();
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
   }
 
   _onViewChange() {

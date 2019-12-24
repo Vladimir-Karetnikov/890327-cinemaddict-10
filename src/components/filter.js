@@ -42,14 +42,10 @@ export default class Filter extends AbstractComponent {
     });
   }
 
-  setPageChangeHandler(statsHandler, otherHandler) {
+  setPageChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (evt.target.classList.contains(`main-navigation__item`)) {
-        if (evt.target.classList.contains(`main-navigation__item--additional`)) {
-          statsHandler();
-        } else {
-          otherHandler();
-        }
+        handler(evt);
       }
     });
   }

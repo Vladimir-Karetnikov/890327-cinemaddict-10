@@ -45,7 +45,7 @@ export default class MoviePopup extends AbstractSmartComponent {
         ${comments.map(({img, text, author, day}) => (`<li
           class="film-details__comment">
           <span class="film-details__comment-emoji">
-            <img src="${img}"
+            <img src="./images/emoji/${img}.png"
               width="55"
               height="55"
               alt="emoji"
