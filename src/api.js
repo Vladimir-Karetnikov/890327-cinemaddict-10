@@ -46,6 +46,19 @@ export default class API {
     .then((json) => Comments.parseComments(json));
   }
 
+  deleteComment(id) {
+    return this._load({url: `comments/${id}`, method: Method.DELETE});
+  }
+
+  createComment(comment) {
+    return this._load({
+      url: `comments/0`,
+      method: Method.POST,
+      body: JSON.stringify(comment.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    });
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 

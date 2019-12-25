@@ -57,7 +57,13 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData) {
+  _onDataChange(oldData, newData, delComment = false, newComment) {
+    if (delComment) {
+      this._api.deleteComment(delComment);
+    }
+    if (newComment) {
+      this._api.createComment(newComment);
+    }
     this._api.updateMovie(oldData.id, newData)
           .then((updatedMovie) => {
             this._api.getComments(updatedMovie.id).then((comments) => {

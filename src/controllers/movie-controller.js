@@ -4,6 +4,7 @@ import {render, RenderPosition, isEscEvent} from '../utils/render.js';
 import he from 'he';
 import moment from 'moment';
 import Movie from '../models/movie.js';
+import Comments from '../models/comments.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -103,21 +104,7 @@ export default class MovieController {
 
     this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
       evt.preventDefault();
-
-      const comment = evt.target.closest(`.film-details__comment`);
-
-      if (!comment) {
-        return;
-      }
-
-      const index = Array.from(this._MoviePopup.getElement().querySelectorAll(`.film-details__comment-delete`))
-        .findIndex((item) => item === comment);
-
-      movie.comments.splice(index, 1);
-
-      this._onDataChange(movie, Object.assign({}, movie));
-
-      comment.remove();
+      this._onDataChange(movie, movie, evt.target.dataset.id);
     });
 
     this._MoviePopup.setFormHandler((evt) => {
@@ -125,18 +112,16 @@ export default class MovieController {
         const data = new Map(new FormData(evt.target.form));
 
 
-        const comment = data.get(`comment`);
+        const comment = he.encode(data.get(`comment`));
         const emoji = this._MoviePopup._emoji;
-
         if (comment && emoji) {
-          movie.comments.unshift({
+          const newComment = new Comments({});
+          Object.assign(newComment, {
             img: emoji,
-            text: he.encode(comment),
-            author: `John Doe`,
-            day: new Date()
+            text: comment,
+            day: moment()
           });
-
-          this._onDataChange(movie, Object.assign({}, movie));
+          this._onDataChange(movie, movie, false, newComment);
         }
       }
     });

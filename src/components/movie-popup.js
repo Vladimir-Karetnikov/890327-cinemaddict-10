@@ -1,5 +1,4 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {emojiList} from '../mock/data.js';
 import {getFilmDuration} from '../utils/utils.js';
 import moment from 'moment';
 
@@ -42,7 +41,7 @@ export default class MoviePopup extends AbstractSmartComponent {
   getCommentListTemplate(comments) {
     return `
       <ul class="film-details__comments-list">
-        ${comments.map(({img, text, author, day}) => (`<li
+        ${comments.map(({id, img, text, author, day}) => (`<li
           class="film-details__comment">
           <span class="film-details__comment-emoji">
             <img src="./images/emoji/${img}.png"
@@ -62,7 +61,7 @@ export default class MoviePopup extends AbstractSmartComponent {
               <span class="film-details__comment-day">
                 ${day}
               </span>
-              <button class="film-details__comment-delete">
+              <button class="film-details__comment-delete" data-id="${id}">
                 Delete
               </button>
             </p>
@@ -225,14 +224,34 @@ export default class MoviePopup extends AbstractSmartComponent {
       <div class="film-details__new-comment">
         <div for="add-emoji"
           class="film-details__add-emoji-label">
-          ${this._emoji ? `<img src="${this._emoji}" width="55" height="55" alt="emoji">` : ``}
+          ${this._emoji ? `<img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji">` : ``}
         </div>
         <label class="film-details__comment-label">
           <textarea class="film-details__comment-input"
             placeholder="Select reaction below and write comment here"
             name="comment"></textarea>
         </label>
-        ${this.getEmojiListTemplate(emojiList)}
+        <div class="film-details__emoji-list">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${this._emoji === `smile` ? `checked` : ``}>
+            <label class="film-details__emoji-label" for="emoji-smile">
+              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${this._emoji === `sleeping` ? `checked` : ``}>
+            <label class="film-details__emoji-label" for="emoji-sleeping">
+              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke" ${this._emoji === `puke` ? `checked` : ``}>
+            <label class="film-details__emoji-label" for="emoji-gpuke">
+              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${this._emoji === `angry` ? `checked` : ``}>
+            <label class="film-details__emoji-label" for="emoji-angry">
+              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+            </label>
+          </div>
       </div>
     </section>
   </div>
@@ -262,14 +281,12 @@ export default class MoviePopup extends AbstractSmartComponent {
   }
 
   onEmojiClick() {
-    const emojis = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`img`);
-    emojis.forEach((it) => it.addEventListener(`click`, () => {
-      const oldEmoji = this._emoji;
-      this._emoji = it.getAttribute(`src`);
-      if (this._emoji !== oldEmoji) {
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+      if (evt.target.classList.contains(`film-details__emoji-item`)) {
+        this._emoji = evt.target.value;
         this.rerender(this);
       }
-    }));
+    });
   }
 
   setDeleteCommentButtonHandler(handler) {
