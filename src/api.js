@@ -50,9 +50,9 @@ export default class API {
     return this._load({url: `comments/${id}`, method: Method.DELETE});
   }
 
-  createComment(comment) {
+  createComment(id, comment) {
     return this._load({
-      url: `comments/0`,
+      url: `comments/${id}`,
       method: Method.POST,
       body: JSON.stringify(comment.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})

@@ -62,7 +62,7 @@ export default class PageController {
       this._api.deleteComment(delComment);
     }
     if (newComment) {
-      this._api.createComment(newComment);
+      this._api.createComment(oldData.id, newComment);
     }
     this._api.updateMovie(oldData.id, newData)
           .then((updatedMovie) => {
