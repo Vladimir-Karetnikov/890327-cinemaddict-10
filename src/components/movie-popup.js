@@ -17,27 +17,6 @@ export default class MoviePopup extends AbstractSmartComponent {
     this._formHandler = null;
   }
 
-  getEmojiListTemplate(emojis) {
-    return `
-      <div class="film-details__emoji-list">
-        ${emojis.map(({id, value, img}) => (`<input
-          class="film-details__emoji-item visually-hidden"
-          name="comment-emoji"
-          type="radio"
-          id="${id}"
-          value="${value}"
-        >
-        <label class="film-details__emoji-label"
-          for="${id}">
-          <img src="${img}"
-            width="30"
-            height="30"
-            alt="emoji"
-          >
-        </label>`)).join(``)}
-      </div>`;
-  }
-
   getCommentListTemplate(comments) {
     return `
       <ul class="film-details__comments-list">
@@ -59,7 +38,7 @@ export default class MoviePopup extends AbstractSmartComponent {
                 ${author}
               </span>
               <span class="film-details__comment-day">
-                ${day}
+                ${moment(day).format(`YYYY/MM/DD HH : MM`)}
               </span>
               <button class="film-details__comment-delete" data-id="${id}">
                 Delete
