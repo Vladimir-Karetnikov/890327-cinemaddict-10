@@ -24,7 +24,6 @@ const pageController = new PageController(siteMainElement, moviesModel, api);
 api.getMovies()
   .then((movies) => {
     moviesModel.setMovies(movies);
-
     const commentsPromisses = moviesModel.getAllMovies().map((movie) => {
       return api.getComments(movie.id).then((comments) => {
         movie.comments = comments;

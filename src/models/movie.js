@@ -57,10 +57,13 @@ export default class Movie {
   }
 
   toRAW() {
+    const commentsID = [];
+    this.comments.forEach((comment) => commentsID.push(comment.id));
+
     return {
       'id': this.id,
-      'comments': [],
-      'film-info': {
+      'comments': commentsID,
+      'film_info': {
         'title': this.title,
         'alternative_title': this.originalTitle,
         'total_rating': this.rating,
@@ -81,7 +84,7 @@ export default class Movie {
         'personal_rating': this.userRating,
         'watchlist': this.onWatchList,
         'already_watched': this.onHistory,
-        'watching_date': this.watchedDate ? new Date(this.watchedDate).toISOString() : new Date(0).toISOString(),
+        'watching_date': new Date(this.watchedDate).toISOString(),
         'favorite': this.onFavorites,
       }
     };

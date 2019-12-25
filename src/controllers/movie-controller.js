@@ -47,47 +47,58 @@ export default class MovieController {
       evt.preventDefault();
       const updatedMovie = new Movie({});
       Object.assign(updatedMovie, movie, {onWatchList: !movie.onWatchList});
-      console.log(JSON.stringify(updatedMovie.toRAW()))
+
       this._onDataChange(movie, updatedMovie);
     });
 
     this._movieCard.setWatchedButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
         onHistory: !movie.onHistory,
-        userRating: movie.onHistory ? movie.userRating : null,
+        userRating: movie.onHistory ? movie.userRating : 0,
         watchedDate: !movie.onHistory ? moment() : null
-      }));
+      });
+
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._movieCard.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
         onFavorites: !movie.onFavorites
-      }));
+      });
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._MoviePopup.setWatchlistInputClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
-        onWatchList: !movie.onWatchList
-      }));
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {onWatchList: !movie.onWatchList});
+
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._MoviePopup.setWatchedInputClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
         onHistory: !movie.onHistory,
-        userRating: movie.onHistory ? movie.userRating : null,
+        userRating: movie.onHistory ? movie.userRating : 0,
         watchedDate: !movie.onHistory ? moment() : null
-      }));
+      });
+
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._MoviePopup.setFavoritesInputClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(movie, Object.assign({}, movie, {
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
         onFavorites: !movie.onFavorites
-      }));
+      });
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
@@ -132,17 +143,20 @@ export default class MovieController {
 
     this._MoviePopup.setRatingHandler((evt) => {
       let newRating = parseInt(evt.target.value, 10);
-      this._onDataChange(movie, Object.assign({}, movie, {
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
         userRating: newRating
-      }));
+      });
+      this._onDataChange(movie, updatedMovie);
     });
 
     this._MoviePopup.setRatingResetHandler((evt) => {
       evt.preventDefault();
-
-      this._onDataChange(movie, Object.assign({}, movie, {
-        userRating: null
-      }));
+      const updatedMovie = new Movie({});
+      Object.assign(updatedMovie, movie, {
+        userRating: 0
+      });
+      this._onDataChange(movie, updatedMovie);
     });
   }
 
