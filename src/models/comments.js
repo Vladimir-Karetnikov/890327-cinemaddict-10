@@ -1,11 +1,11 @@
 export default class Comments {
   constructor(data) {
 
-    this.id = data[`id`] || ``;
-    this.img = data[`emotion`] || ``;
-    this.author = data[`author`] || ``;
+    this.id = data[`id`];
+    this.img = data[`emotion`];
+    this.author = data[`author`];
     this.text = data[`comment`];
-    this.day = data[`date`] || null;
+    this.day = data[`date`];
   }
 
   toRAW() {

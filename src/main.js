@@ -17,19 +17,11 @@ const siteHeaderElement = document.querySelector(`.header`);
 
 const siteMainElement = document.querySelector(`.main`);
 const filterController = new FilterController(siteMainElement, moviesModel);
-
-render(document.body, new Footer(), RenderPosition.BEFOREEND);
 const pageController = new PageController(siteMainElement, moviesModel, api);
 
 api.getMovies()
   .then((movies) => {
     moviesModel.setMovies(movies);
-    const commentsPromisses = moviesModel.getAllMovies().map((movie) => {
-      return api.getComments(movie.id).then((comments) => {
-        movie.comments = comments;
-      });
-    });
-
     const statsComponent = new Stats(moviesModel);
 
     filterController.setPageChangeHandler((evt) => {
@@ -43,10 +35,9 @@ api.getMovies()
       }
     });
 
-    Promise.all(commentsPromisses).then(() => {
-      render(siteHeaderElement, new Profile(moviesModel), RenderPosition.BEFOREEND);
-      filterController.render();
-      pageController.render();
-      render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
-    });
+    render(siteHeaderElement, new Profile(moviesModel), RenderPosition.BEFOREEND);
+    filterController.render();
+    pageController.render();
+    render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
+    render(document.body, new Footer(moviesModel.getAllMovies().length), RenderPosition.BEFOREEND);
   });

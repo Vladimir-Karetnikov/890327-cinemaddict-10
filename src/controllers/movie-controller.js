@@ -5,18 +5,20 @@ import he from 'he';
 import moment from 'moment';
 import Movie from '../models/movie.js';
 import Comments from '../models/comments.js';
+import CommentsComponent from '../components/comments.js';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
+    this._api = api;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onFilmDetailsEscPress = this._onFilmDetailsEscPress.bind(this);
     this._closeFilmDetails = this._closeFilmDetails.bind(this);
-    this._onFilmCardElementClick = this._onFilmCardElementClick.bind(this);
 
     this._movieCard = null;
     this._MoviePopup = null;
+    this._commentsComponent = null;
   }
 
   render(movie) {
@@ -41,7 +43,23 @@ export default class MovieController {
   }
 
   _setComponentsClickHandlers(movie) {
-    this._movieCard.setPopupOpener(this._onFilmCardElementClick);
+    this._movieCard.setPopupOpener((evt) => {
+      evt.preventDefault();
+
+      this._onViewChange();
+      render(document.body, this._MoviePopup, RenderPosition.BEFOREEND);
+
+      this._api.getComments(movie.id).then((comments) => {
+        this._commentsComponent = new CommentsComponent(comments);
+        const commentsContainer = this._MoviePopup.getElement().querySelector(`.film-details__comments-wrap`);
+
+        render(commentsContainer, this._commentsComponent, RenderPosition.AFTERBEGIN);
+      });
+
+      document.addEventListener(`keydown`, this._onFilmDetailsEscPress);
+      this._MoviePopup.setCloseClickHandler(this._closeFilmDetails);
+    });
+
     this._MoviePopup.onEmojiClick();
 
     this._movieCard.setWatchlistButtonClickHandler((evt) => {
@@ -102,10 +120,10 @@ export default class MovieController {
       this._onDataChange(movie, updatedMovie);
     });
 
-    this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(movie, movie, evt.target.dataset.id);
-    });
+    // this._MoviePopup.setDeleteCommentButtonHandler((evt) => {
+    //   evt.preventDefault();
+    //   this._onDataChange(movie, movie, evt.target.dataset.id);
+    // });
 
     this._MoviePopup.setFormHandler((evt) => {
       if (evt.ctrlKey && evt.key === `Enter`) {
@@ -152,15 +170,6 @@ export default class MovieController {
 
   _onFilmDetailsEscPress(evt) {
     isEscEvent(evt, this._closeFilmDetails);
-  }
-
-  _onFilmCardElementClick(evt) {
-    evt.preventDefault();
-
-    this._onViewChange();
-    render(document.body, this._MoviePopup, RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, this._onFilmDetailsEscPress);
-    this._MoviePopup.setCloseClickHandler(this._closeFilmDetails);
   }
 
   setDefaultView() {
