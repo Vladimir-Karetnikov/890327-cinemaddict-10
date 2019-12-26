@@ -9,20 +9,21 @@ export const FilterType = {
 
 export default class Filter extends AbstractComponent {
 
-  constructor(inWatchlist, inHistory, inFavorites) {
+  constructor(inWatchlist, inHistory, inFavorites, activeFilter) {
     super();
     this._inWatchlist = inWatchlist;
     this._inHistory = inHistory;
     this._inFavorites = inFavorites;
+    this._activeFilter = activeFilter;
   }
 
   getTemplate() {
     return (
       `<nav class="main-navigation">
-        <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${this._inWatchlist}</span></a>
-        <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count">${this._inHistory}</span></a>
-        <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${this._inFavorites}</span></a>
+        <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item ${this._activeFilter === `all` ? `main-navigation__item--active` : ``}">All movies</a>
+        <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item ${this._activeFilter === `watchlist` ? `main-navigation__item--active` : ``}">Watchlist <span class="main-navigation__item-count">${this._inWatchlist}</span></a>
+        <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item ${this._activeFilter === `history` ? `main-navigation__item--active` : ``}">History <span class="main-navigation__item-count">${this._inHistory}</span></a>
+        <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item ${this._activeFilter === `favorites` ? `main-navigation__item--active` : ``}">Favorites <span class="main-navigation__item-count">${this._inFavorites}</span></a>
         <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
       </nav>`);
   }
@@ -42,14 +43,10 @@ export default class Filter extends AbstractComponent {
     });
   }
 
-  setPageChangeHandler(statsHandler, otherHandler) {
+  setPageChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (evt.target.classList.contains(`main-navigation__item`)) {
-        if (evt.target.classList.contains(`main-navigation__item--additional`)) {
-          statsHandler();
-        } else {
-          otherHandler();
-        }
+        handler(evt);
       }
     });
   }

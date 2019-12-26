@@ -8,9 +8,9 @@ export default class MovieCard extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    let description = [...this.movie.description].join(` `);
-    if (description.length > 140) {
-      description = description.substring(0, 140) + `...`;
+    let description = [...this.movie.description].join(``);
+    if (description.length > 139) {
+      description = description.substring(0, 139) + `…`;
     }
 
     return (
