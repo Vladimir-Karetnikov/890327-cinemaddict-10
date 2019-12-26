@@ -20,14 +20,14 @@ export default class FilterController {
 
   render() {
     const container = this._container;
-    const movies = this._moviesModel.getMovies();
-    const inWatchlist = movies.reduce((acc, movie) => movie.onWatchList === true ? ++acc : acc, 0);
-    const inHistory = movies.reduce((acc, movie) => movie.onHistory === true ? ++acc : acc, 0);
-    const inFavorites = movies.reduce((acc, movie) => movie.onFavorites === true ? ++acc : acc, 0);
+    const movies = this._moviesModel.getAllMovies();
+    const inWatchlist = movies.reduce((acc, movie) => movie.onWatchList ? ++acc : acc, 0);
+    const inHistory = movies.reduce((acc, movie) => movie.onHistory ? ++acc : acc, 0);
+    const inFavorites = movies.reduce((acc, movie) => movie.onFavorites ? ++acc : acc, 0);
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new Filter(inWatchlist, inHistory, inFavorites);
+    this._filterComponent = new Filter(inWatchlist, inHistory, inFavorites, this._activeFilterType);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
     this._filterComponent.setPageChangeHandler(this._pageSwapHandler);
 
