@@ -12,13 +12,9 @@ const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-
 const siteHeaderElement = document.querySelector(`.header`);
-
 const siteMainElement = document.querySelector(`.main`);
 const filterController = new FilterController(siteMainElement, moviesModel);
-
-render(document.body, new Footer(), RenderPosition.BEFOREEND);
 const pageController = new PageController(siteMainElement, moviesModel, api);
 
 api.getMovies()
@@ -42,4 +38,5 @@ api.getMovies()
     filterController.render();
     pageController.render();
     render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
+    render(document.body, new Footer(moviesModel.getAllMovies().length), RenderPosition.BEFOREEND);
   });
