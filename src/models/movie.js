@@ -57,12 +57,9 @@ export default class Movie {
   }
 
   toRAW() {
-    const commentsID = [];
-    this.comments.forEach((comment) => commentsID.push(comment.id));
-
     return {
       'id': this.id,
-      'comments': commentsID,
+      'comments': this.comments,
       'film_info': {
         'title': this.title,
         'alternative_title': this.originalTitle,

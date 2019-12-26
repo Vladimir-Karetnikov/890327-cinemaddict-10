@@ -17,38 +17,6 @@ export default class MoviePopup extends AbstractSmartComponent {
     this._formHandler = null;
   }
 
-  getCommentListTemplate(comments) {
-    return `
-      <ul class="film-details__comments-list">
-        ${comments.map(({id, img, text, author, day}) => (`<li
-          class="film-details__comment">
-          <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${img}.png"
-              width="55"
-              height="55"
-              alt="emoji"
-            >
-          </span>
-          <div>
-            <p class="film-details__comment-text">
-              ${text}
-            </p>
-            <p class="film-details__comment-info">
-              <span class="film-details__comment-author">
-                ${author}
-              </span>
-              <span class="film-details__comment-day">
-                ${moment(day).format(`YYYY/MM/DD HH : MM`)}
-              </span>
-              <button class="film-details__comment-delete" data-id="${id}">
-                Delete
-              </button>
-            </p>
-          </div>
-        </li>`)).join(``)}
-      </ul>`;
-  }
-
   createFilmRatingTemplate() {
     return (`<section class="film-details__user-rating-wrap">
           <div class="film-details__user-rating-controls">
@@ -193,13 +161,6 @@ export default class MoviePopup extends AbstractSmartComponent {
   <div class="form-details__middle-container">${this._movie.onHistory ? this.createFilmRatingTemplate() : ``}</div>
   <div class="form-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">
-        Comments
-        <span class="film-details__comments-count">
-          ${this._movie.comments.length}
-        </span>
-      </h3>
-      ${this.getCommentListTemplate(this._movie.comments)}
       <div class="film-details__new-comment">
         <div for="add-emoji"
           class="film-details__add-emoji-label">
@@ -263,15 +224,8 @@ export default class MoviePopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
       if (evt.target.classList.contains(`film-details__emoji-item`)) {
         this._emoji = evt.target.value;
-        this.rerender(this);
+        this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji">`;
       }
-    });
-  }
-
-  setDeleteCommentButtonHandler(handler) {
-    this._deleteCommentButtonHandler = handler;
-    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
-      item.addEventListener(`click`, handler);
     });
   }
 
