@@ -60,13 +60,7 @@ export default class PageController {
     }
   }
 
-  _onDataChange(oldData, newData, delComment = false, newComment) {
-    if (delComment) {
-      this._api.deleteComment(delComment);
-    }
-    if (newComment) {
-      this._api.createComment(oldData.id, newComment);
-    }
+  _onDataChange(oldData, newData) {
     this._api.updateMovie(oldData.id, newData)
         .then((updatedMovie) => {
           const isSuccess = this._moviesModel.updateMovie(oldData.id, updatedMovie);

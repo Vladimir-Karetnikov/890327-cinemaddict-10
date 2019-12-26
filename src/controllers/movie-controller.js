@@ -52,7 +52,8 @@ export default class MovieController {
 
       this._commentsSection.setDeleteCommentButtonHandler((delEvt) => {
         delEvt.preventDefault();
-        this._onDataChange(this._movie, this._movie, delEvt.target.dataset.id);
+        this._api.deleteComment(delEvt.target.dataset.id)
+          .then(() => this._onDataChange(movie, movie));
       });
 
       const commentsContainer = this._MoviePopup.getElement().querySelector(`.film-details__comments-wrap`);
@@ -133,13 +134,21 @@ export default class MovieController {
         const comment = he.encode(data.get(`comment`));
         const emoji = this._MoviePopup._emoji;
         if (comment && emoji) {
+          this._MoviePopup.getElement().querySelector(`.film-details__comment-input`).style.outline = `none`;
+          this._MoviePopup.disableForm();
           const newComment = new Comments({});
           Object.assign(newComment, {
             img: emoji,
             text: comment,
             day: moment()
           });
-          this._onDataChange(movie, movie, false, newComment);
+          this._api.createComment(movie.id, newComment)
+          .then(() => this._onDataChange(movie, movie))
+          .catch(() => {
+            this._MoviePopup.getElement().classList.add(`shake`);
+            this._MoviePopup.activateForm();
+            this._MoviePopup.getElement().querySelector(`.film-details__comment-input`).style.outline = `4px solid #cc0000`;
+          });
         }
       }
     });
@@ -150,7 +159,16 @@ export default class MovieController {
       Object.assign(updatedMovie, movie, {
         userRating: newRating
       });
-      this._onDataChange(movie, updatedMovie);
+      this._MoviePopup.disableRating();
+      this._api.updateMovie(movie.id, updatedMovie)
+      .then(() => {
+        this._onDataChange(movie, updatedMovie);
+      })
+      .catch(() => {
+        this._MoviePopup.getElement().classList.add(`shake`);
+        this._MoviePopup.activateRating();
+        evt.target.labels[0].style.backgroundColor = `#cc0000`;
+      });
     });
 
     this._MoviePopup.setRatingResetHandler((evt) => {
@@ -187,7 +205,8 @@ export default class MovieController {
 
           this._commentsSection.setDeleteCommentButtonHandler((delEvt) => {
             delEvt.preventDefault();
-            this._onDataChange(this._movie, this._movie, delEvt.target.dataset.id);
+            this._api.deleteComment(delEvt.target.dataset.id)
+              .then(() => this._onDataChange(this._movie, this._movie));
           });
 
 
