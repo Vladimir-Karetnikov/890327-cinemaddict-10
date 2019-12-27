@@ -205,6 +205,7 @@ export default class MovieController {
 
           this._commentsSection.setDeleteCommentButtonHandler((delEvt) => {
             delEvt.preventDefault();
+            delEvt.path[3].style.color = `grey`;
             this._api.deleteComment(delEvt.target.dataset.id)
               .then(() => this._onDataChange(this._movie, this._movie));
           });
