@@ -236,10 +236,12 @@ export default class MoviePopup extends AbstractSmartComponent {
 
   disableForm() {
     this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
+    this.getElement().querySelector(`.film-details__comment-input`).style.backgroundColor = `grey`;
   }
 
   activateForm() {
     this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
+    this.getElement().querySelector(`.film-details__comment-input`).style.backgroundColor = `white`;
   }
 
   disableRating() {
