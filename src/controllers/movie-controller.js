@@ -5,7 +5,7 @@ import he from 'he';
 import moment from 'moment';
 import Movie from '../models/movie.js';
 import Comments from '../models/comments.js';
-import CommentsComponent from '../components/commentsComponent.js';
+import CommentsComponent from '../components/comments-component.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange, api) {
@@ -53,8 +53,15 @@ export default class MovieController {
       this._commentsSection.setDeleteCommentButtonHandler((delEvt) => {
         delEvt.preventDefault();
         delEvt.path[3].style.color = `grey`;
+        delEvt.target.textContent = `Deleting...`;
+        delEvt.target.disabled = true;
         this._api.deleteComment(delEvt.target.dataset.id)
-          .then(() => this._onDataChange(movie, movie));
+          .then(() => this._onDataChange(this._movie, this._movie))
+          .catch(() => {
+            delEvt.path[3].style.color = `white`;
+            delEvt.target.textContent = `Delete`;
+            delEvt.target.disabled = false;
+          });
       });
 
       const commentsContainer = this._MoviePopup.getElement().querySelector(`.film-details__comments-wrap`);
@@ -207,8 +214,15 @@ export default class MovieController {
           this._commentsSection.setDeleteCommentButtonHandler((delEvt) => {
             delEvt.preventDefault();
             delEvt.path[3].style.color = `grey`;
+            delEvt.target.textContent = `Deleting...`;
+            delEvt.target.disabled = true;
             this._api.deleteComment(delEvt.target.dataset.id)
-              .then(() => this._onDataChange(this._movie, this._movie));
+              .then(() => this._onDataChange(this._movie, this._movie))
+              .catch(() => {
+                delEvt.path[3].style.color = `white`;
+                delEvt.target.textContent = `Delete`;
+                delEvt.target.disabled = false;
+              });
           });
 
 

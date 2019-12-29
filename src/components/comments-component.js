@@ -33,7 +33,7 @@ export default class CommentsComponent extends AbstractComponent {
                 ${author}
               </span>
               <span class="film-details__comment-day">
-                ${moment(day).format(`YYYY/MM/DD HH : MM`)}
+                ${moment(day).fromNow()}
               </span>
               <button class="film-details__comment-delete" data-id="${id}">
                 Delete

@@ -9,7 +9,7 @@ export default class Profile extends AbstractComponent {
   }
 
   getTemplate() {
-    let rankName = this._moviesModel.getRank();
+    const rankName = this._moviesModel.getRank();
 
     return (`<section class="header__profile profile">
     <p class="profile__rating">${rankName}</p>

@@ -16,9 +16,11 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const filterController = new FilterController(siteMainElement, moviesModel);
 const pageController = new PageController(siteMainElement, moviesModel, api);
+siteMainElement.innerHTML = `<h2>Loading…</h2>`;
 
 api.getMovies()
   .then((movies) => {
+    siteMainElement.innerHTML = ``;
     moviesModel.setMovies(movies);
 
     const statsComponent = new Stats(moviesModel);

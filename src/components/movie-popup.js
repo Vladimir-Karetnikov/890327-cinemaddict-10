@@ -1,6 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getFilmDuration} from '../utils/utils.js';
 import moment from 'moment';
+import {debounce} from 'debounce';
+
+const DEBOUNCE_TIMEOUT = 300;
 
 export default class MoviePopup extends AbstractSmartComponent {
   constructor(movie) {
@@ -197,15 +200,15 @@ export default class MoviePopup extends AbstractSmartComponent {
   }
 
   setWatchlistInputClickHandler(handler) {
-    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setWatchedInputClickHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setFavoritesInputClickHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onEmojiClick() {

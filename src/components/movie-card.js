@@ -1,5 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getFilmDuration} from '../utils/utils.js';
+import {debounce} from 'debounce';
+
+const DEBOUNCE_TIMEOUT = 300;
 
 export default class MovieCard extends AbstractSmartComponent {
   constructor(movie) {
@@ -9,7 +12,7 @@ export default class MovieCard extends AbstractSmartComponent {
 
   getTemplate() {
     let description = [...this.movie.description].join(``);
-    if (description.length > 139) {
+    if (description.length > 140) {
       description = description.substring(0, 139) + `…`;
     }
 
@@ -48,14 +51,14 @@ export default class MovieCard extends AbstractSmartComponent {
   }
 
   setWatchlistButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setWatchedButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setFavoritesButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 }
