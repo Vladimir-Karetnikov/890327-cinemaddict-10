@@ -6,8 +6,10 @@ import ShowMoreBtn from '../components/show-more-btn.js';
 import {render, RenderPosition} from '../utils/render.js';
 import FilmsExtra from '../components/films-extra.js';
 
-const MOVIES_STARTING_COUNT = 5;
-const SHOWING_MOVIES_COUNT_BY_BUTTON = 5;
+const MoviesCount = {
+  MOVIES_STARTING_COUNT: 5,
+  SHOWING_MOVIES_COUNT_BY_BUTTON: 5
+};
 
 const renderFilmCards = (movies, container, onDataChange, onViewChange, api) => {
   return movies.map((movie) => {
@@ -34,7 +36,7 @@ export default class PageController {
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
     this._onSortChange = this._onSortChange.bind(this);
     this._sortChangeHandler = this._sortChangeHandler.bind(this);
-    this._showingMoviesCount = MOVIES_STARTING_COUNT;
+    this._showingMoviesCount = MoviesCount.MOVIES_STARTING_COUNT;
     this._showedMovieControllers = [];
     this._moviesModel.setFilterChangeHandler(this._onFilterChange);
     this._moviesModel.setSortChangeHandler(this._sortChangeHandler);
@@ -162,7 +164,7 @@ export default class PageController {
     const prevMoviesCount = this._showingMoviesCount;
     const movies = this._moviesModel.getMovies();
 
-    this._showingMoviesCount = this._showingMoviesCount + SHOWING_MOVIES_COUNT_BY_BUTTON;
+    this._showingMoviesCount = this._showingMoviesCount + MoviesCount.SHOWING_MOVIES_COUNT_BY_BUTTON;
 
     const newCards = renderFilmCards(movies.slice(prevMoviesCount, this._showingMoviesCount), mainMoviesContainer, this._onDataChange, this._onViewChange, this._api);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);

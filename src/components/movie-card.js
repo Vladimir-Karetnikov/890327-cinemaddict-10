@@ -1,8 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getFilmDuration} from '../utils/utils.js';
 import {debounce} from 'debounce';
-
-const DEBOUNCE_TIMEOUT = 300;
+import {DEBOUNCE_TIMEOUT, DescriptionLength} from '../utils/const.js';
 
 export default class MovieCard extends AbstractSmartComponent {
   constructor(movie) {
@@ -12,8 +11,8 @@ export default class MovieCard extends AbstractSmartComponent {
 
   getTemplate() {
     let description = [...this.movie.description].join(``);
-    if (description.length > 140) {
-      description = description.substring(0, 139) + `…`;
+    if (description.length > DescriptionLength.MAX) {
+      description = description.substring(0, DescriptionLength.REQUIRED) + `…`;
     }
 
     return (

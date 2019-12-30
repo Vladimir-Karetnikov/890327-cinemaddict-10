@@ -2,8 +2,7 @@ import AbstractSmartComponent from "./abstract-smart-component";
 import {getFilmDuration} from '../utils/utils.js';
 import moment from 'moment';
 import {debounce} from 'debounce';
-
-const DEBOUNCE_TIMEOUT = 300;
+import {DEBOUNCE_TIMEOUT} from '../utils/const.js';
 
 export default class MoviePopup extends AbstractSmartComponent {
   constructor(movie) {

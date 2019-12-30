@@ -1,6 +1,7 @@
 import {getMoviesByFilter, getSortedMovies} from '../utils/filter.js';
 import {FilterType} from '../components/filter.js';
 import {SortType} from '../components/sort.js';
+import {UserLevel} from '../utils/const.js';
 
 export default class MoviesModel {
   constructor() {
@@ -27,11 +28,11 @@ export default class MoviesModel {
 
   getRank() {
     const watchedMovies = this._movies.reduce((acc, movie) => movie.onHistory ? ++acc : acc, 0);
-    if (watchedMovies > 21) {
+    if (watchedMovies > UserLevel.MOVIE_BUFF) {
       return `Movie Buff`;
-    } else if (watchedMovies > 10) {
+    } else if (watchedMovies > UserLevel.FAN) {
       return `Fan`;
-    } else if (watchedMovies > 0) {
+    } else if (watchedMovies > UserLevel.NOVICE) {
       return `Novice`;
     } else {
       return ``;

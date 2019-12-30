@@ -1,5 +1,6 @@
 import Movie from './models/movie.js';
 import Comments from './models/comments.js';
+import {ResponseStatus} from './utils/const.js';
 
 const Method = {
   GET: `GET`,
@@ -9,7 +10,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= ResponseStatus.OK && response.status < ResponseStatus.REDIRECTION) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
